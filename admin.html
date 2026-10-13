@@ -3,337 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTB | Direct File Upload CMS Control Panel</title>
+    <title>BTB Admin Panel | Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
-                extend: { colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' } }
+                extend: {
+                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+                }
             }
         }
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
 
-    <!-- Auth -->
-    <div id="authOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-sm w-full text-center">
-            <h2 class="text-2xl font-black text-white mb-2">BTB CMS Password</h2>
-            <input type="password" id="passInput" placeholder="Password (admin123)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm mb-3">
-            <button onclick="checkPass()" class="w-full py-3 bg-bdGreen text-white font-bold text-xs rounded-xl">Unlock Panel</button>
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center">
+            <div class="w-16 h-16 bg-bdGreen text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg border border-emerald-400/30">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white">BTB CMS Portal</h2>
+            <p class="text-xs text-slate-400 mt-1 mb-6">Enter system passcode to access dashboard</p>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="password" id="passcodeInput" placeholder="Enter Admin Passcode" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-sm font-mono tracking-widest text-white focus:outline-none focus:border-emerald-500">
+                <p id="loginError" class="text-xs text-bdRed font-bold hidden">Invalid passcode! Try again.</p>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">Unlock CMS Dashboard</button>
+            </form>
         </div>
     </div>
 
-    <div id="adminApp" class="hidden">
-        <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-40 flex justify-between items-center">
-            <h1 class="font-bold text-white text-base"><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i> BTB Direct File Manager</h1>
-            <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 text-xs font-bold text-emerald-400 rounded-lg border border-emerald-600/30">View Public Site <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div id="dashboardContent" class="hidden min-h-screen flex flex-col">
+        <!-- Top Admin Header -->
+        <header class="bg-slate-900 border-b border-emerald-900/50 sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-lg bg-bdGreen flex items-center justify-center text-emerald-300 font-bold text-sm">BTB</span>
+                    <div>
+                        <h1 class="text-sm font-bold text-white">Bangladesh Tourism Board</h1>
+                        <p class="text-[10px] text-emerald-400 font-medium">Control Management System (CMS)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700"><i class="fa-solid fa-globe mr-1"></i> View Live Site</a>
+                    <button onclick="handleLogout()" class="px-3 py-1.5 bg-red-950/60 text-bdRed hover:bg-red-900/50 text-xs font-bold rounded-lg transition border border-red-800/40"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
+                </div>
+            </div>
         </header>
 
-        <main class="max-w-7xl mx-auto p-6 space-y-10">
-            <!-- 1. SLIDERS MANAGER -->
-            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-emerald-400 text-base"><i class="fa-solid fa-images mr-2"></i> Hero Sliders (Direct Video Upload)</h2>
-                    <button onclick="openSliderModal()" class="px-3 py-1.5 bg-bdGreen text-white text-xs font-bold rounded-lg">+ Add Slide</button>
+        <!-- Main Dashboard Body -->
+        <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white">Content Management</h2>
+                    <p class="text-xs text-slate-400">Manage video sliders, destinations, notices, and cultural fairs</p>
                 </div>
-                <div id="sliderAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </section>
+                <button onclick="openModal('sliderModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add New Slide</button>
+            </div>
 
-            <!-- 2. NOTICES MANAGER -->
-            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-bdRed text-base"><i class="fa-solid fa-bullhorn mr-2"></i> Official Notices (Direct PDF Upload)</h2>
-                    <button onclick="openNoticeModal()" class="px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-lg">+ Add Notice</button>
+            <!-- HERO SLIDERS TABLE -->
+            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-sliders text-emerald-400"></i> Active Hero Sliders</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
+                                <th class="py-3 px-2">ID</th>
+                                <th class="py-3 px-2">Title</th>
+                                <th class="py-3 px-2">Subtitle</th>
+                                <th class="py-3 px-2">Video Source</th>
+                                <th class="py-3 px-2 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="slidersTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
+                    </table>
                 </div>
-                <div id="noticeAdminList" class="space-y-3"></div>
-            </section>
-
-            <!-- 3. DESTINATIONS & HOTELS MANAGER -->
-            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-amber-400 text-base"><i class="fa-solid fa-map-pin mr-2"></i> Destinations (Direct Image Upload)</h2>
-                    <button onclick="openDestModal()" class="px-3 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg">+ Add Tourist Spot</button>
-                </div>
-                <div id="destAdminList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            </section>
-
-            <!-- 4. CULTURAL FAIRS MANAGER -->
-            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-purple-400 text-base"><i class="fa-solid fa-masks-theater mr-2"></i> Cultural Programs & Fairs</h2>
-                    <button onclick="openCulturalModal()" class="px-3 py-1.5 bg-purple-700 text-white text-xs font-bold rounded-lg">+ Add Cultural Program</button>
-                </div>
-                <div id="culturalAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </section>
-
-            <!-- 5. BOARD MEMBERS MANAGER -->
-            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-blue-400 text-base"><i class="fa-solid fa-users mr-2"></i> Board Members</h2>
-                    <button onclick="openBoardMemberModal()" class="px-3 py-1.5 bg-blue-700 text-white text-xs font-bold rounded-lg">+ Add Member</button>
-                </div>
-                <div id="boardAdminList" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
             </section>
         </main>
     </div>
 
-    <!-- Dynamic Modal -->
-    <div id="formModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-lg w-full relative">
-            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 id="modalTitle" class="text-lg font-bold text-white mb-4">Edit Item</h3>
-            <div id="modalFields" class="space-y-3"></div>
-            <button onclick="saveModalData()" class="w-full mt-5 py-3 bg-bdGreen text-white font-bold text-xs rounded-xl">Save & Publish</button>
+    <!-- MODAL: ADD SLIDER -->
+    <div id="sliderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('sliderModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white mb-4">Add New Slide</h3>
+
+            <form onsubmit="saveSlider(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Main Title:</label>
+                    <input type="text" id="sliderTitle" placeholder="e.g. BEAUTIFUL BANGLADESH" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Subtitle:</label>
+                    <input type="text" id="sliderSub" placeholder="e.g. Land of Greenery, Rivers & Endless Heritage" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <!-- VIDEO PATH / URL INPUT -->
+                <div>
+                    <label class="block text-xs font-bold text-emerald-400 mb-1">Video File Path or Direct URL (Recommended):</label>
+                    <input type="text" id="sliderVideoUrl" placeholder="e.g. videos/slide1.mp4 or https://..." class="w-full bg-slate-950 border border-emerald-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <p class="text-[10px] text-slate-400 mt-1">প্রজেক্টে ফাইল রাখলে `videos/slide1.mp4` লেখো, অথবা কোনো ভিডিও লিংক দাও।</p>
+                </div>
+
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t border-slate-800"></div>
+                    <span class="flex-shrink mx-2 text-[10px] text-slate-500 font-bold uppercase">OR</span>
+                    <div class="flex-grow border-t border-slate-800"></div>
+                </div>
+
+                <!-- DIRECT FILE UPLOAD -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Select MP4 Video File (Small files < 3MB):</label>
+                    <input type="file" id="sliderVideoFile" accept="video/mp4" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Save & Publish</button>
+            </form>
         </div>
     </div>
 
     <script>
-        function checkPass() {
-            if(document.getElementById('passInput').value === 'admin123') {
-                document.getElementById('authOverlay').classList.add('hidden');
-                document.getElementById('adminApp').classList.remove('hidden');
-                renderAllAdmin();
+        const AUTH_PASS = "admin123";
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('passcodeInput').value;
+            if(pass === AUTH_PASS) {
+                sessionStorage.setItem('btb_auth', 'true');
+                checkAuth();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
             }
         }
 
-        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [];
-        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
-        let destinations = JSON.parse(localStorage.getItem('btb_dests')) || [];
-        let culturals = JSON.parse(localStorage.getItem('btb_culturals')) || [];
-        let boardMembers = JSON.parse(localStorage.getItem('btb_boards')) || [];
+        function checkAuth() {
+            if(sessionStorage.getItem('btb_auth') === 'true') {
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('dashboardContent').classList.remove('hidden');
+                renderSlidersTable();
+            } else {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+                document.getElementById('dashboardContent').classList.add('hidden');
+            }
+        }
 
-        let activeType = '', activeId = null;
+        function handleLogout() {
+            sessionStorage.removeItem('btb_auth');
+            checkAuth();
+        }
 
-        // Helper Function: Convert File Input to Base64 Data URL
-        function fileToBase64(file) {
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
+            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4" }
+        ];
+
+        function renderSlidersTable() {
+            const tbody = document.getElementById('slidersTableBody');
+            if(!sliders || sliders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No sliders added yet</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = sliders.map(s => `
+                <tr>
+                    <td class="py-3 px-2 font-mono text-slate-400">#${s.id}</td>
+                    <td class="py-3 px-2 font-bold text-white">${s.title}</td>
+                    <td class="py-3 px-2 text-slate-300 max-w-xs truncate">${s.sub}</td>
+                    <td class="py-3 px-2 text-emerald-400 font-mono text-[11px] max-w-xs truncate">${s.video}</td>
+                    <td class="py-3 px-2 text-right">
+                        <button onclick="deleteSlider(${s.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveSlider(e) {
+            e.preventDefault();
+            const title = document.getElementById('sliderTitle').value;
+            const sub = document.getElementById('sliderSub').value;
+            const videoUrlInput = document.getElementById('sliderVideoUrl').value.trim();
+            const fileInput = document.getElementById('sliderVideoFile');
+
+            let videoSource = "";
+
+            if(videoUrlInput !== "") {
+                videoSource = videoUrlInput;
+            } else if(fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                videoSource = await convertToBase64(file);
+            } else {
+                alert("Please enter a Video Path/URL or select a video file!");
+                return;
+            }
+
+            try {
+                const newSlider = {
+                    id: Date.now(),
+                    title: title,
+                    sub: sub,
+                    video: videoSource
+                };
+
+                sliders.push(newSlider);
+                localStorage.setItem('btb_sliders', JSON.stringify(sliders));
+                renderSlidersTable();
+                closeModal('sliderModal');
+
+                // Clear input fields
+                document.getElementById('sliderTitle').value = "";
+                document.getElementById('sliderSub').value = "";
+                document.getElementById('sliderVideoUrl').value = "";
+                fileInput.value = "";
+
+                alert("Slide saved & published successfully!");
+            } catch (error) {
+                alert("Failed to save slide! Memory full. Please use 'Video File Path or Direct URL' instead of uploading large files.");
+            }
+        }
+
+        function convertToBase64(file) {
             return new Promise((resolve, reject) => {
-                if(!file) { resolve(''); return; }
                 const reader = new FileReader();
+                reader.readAsDataURL(file);
                 reader.onload = () => resolve(reader.result);
                 reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
             });
         }
 
-        function saveAll() {
-            localStorage.setItem('btb_sliders', JSON.stringify(sliders));
-            localStorage.setItem('btb_notices', JSON.stringify(notices));
-            localStorage.setItem('btb_dests', JSON.stringify(destinations));
-            localStorage.setItem('btb_culturals', JSON.stringify(culturals));
-            localStorage.setItem('btb_boards', JSON.stringify(boardMembers));
-            renderAllAdmin();
-        }
-
-        function renderAllAdmin() {
-            document.getElementById('sliderAdminList').innerHTML = sliders.map(s => `
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
-                    <div><h4 class="font-bold text-white text-sm">${s.title}</h4><p class="text-xs text-slate-400">${s.sub}</p></div>
-                    <div class="flex gap-2"><button onclick="editSlider(${s.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteSlider(${s.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
-                </div>
-            `).join('');
-
-            document.getElementById('noticeAdminList').innerHTML = notices.map(n => `
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
-                    <div><h4 class="font-bold text-white text-sm">${n.title}</h4><p class="text-xs text-slate-400">${n.date}</p></div>
-                    <div class="flex gap-2"><button onclick="editNotice(${n.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteNotice(${n.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
-                </div>
-            `).join('');
-
-            document.getElementById('destAdminList').innerHTML = destinations.map(d => `
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <img src="${d.img}" class="w-full h-28 object-cover rounded-xl mb-2">
-                    <h4 class="font-bold text-white text-sm">${d.name} ${d.isTop ? '<span class="text-[10px] text-amber-400 font-bold">(Top)</span>' : ''}</h4>
-                    <p class="text-xs text-emerald-400">${d.location} (${d.category})</p>
-                    <div class="flex justify-end gap-2 mt-3 pt-2 border-t border-slate-800">
-                        <button onclick="editDest(${d.id})" class="px-3 py-1 bg-slate-800 text-emerald-400 text-xs rounded-lg font-bold">Edit</button>
-                        <button onclick="deleteDest(${d.id})" class="px-3 py-1 bg-slate-800 text-bdRed text-xs rounded-lg font-bold">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('culturalAdminList').innerHTML = culturals.map(c => `
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
-                    <div><h4 class="font-bold text-white text-sm">${c.title}</h4><p class="text-xs text-purple-400">${c.date}</p></div>
-                    <div class="flex gap-2"><button onclick="editCultural(${c.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteCultural(${c.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
-                </div>
-            `).join('');
-
-            document.getElementById('boardAdminList').innerHTML = boardMembers.map(b => `
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
-                    <div class="flex items-center gap-2"><img src="${b.img}" class="w-10 h-10 rounded-full object-cover"><div><h4 class="font-bold text-white text-xs">${b.name}</h4><p class="text-[10px] text-slate-400">${b.role}</p></div></div>
-                    <button onclick="deleteBoard(${b.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function closeModal() { document.getElementById('formModal').classList.add('hidden'); }
-
-        function openSliderModal(item = null) {
-            activeType = 'slider'; activeId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Slide' : 'Add New Slide';
-            document.getElementById('modalFields').innerHTML = `
-                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Slide Main Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.sub : ''}" placeholder="Subtitle / Tagline" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select MP4 Video File (Direct Upload):</label>
-                    <input type="file" id="fileVideo" accept="video/mp4,video/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-            `;
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function openNoticeModal(item = null) {
-            activeType = 'notice'; activeId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Notice' : 'Add Notice';
-            document.getElementById('modalFields').innerHTML = `
-                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Notice Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.date : 'Oct 13, 2026'}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select PDF Notice File (Direct Upload):</label>
-                    <input type="file" id="filePdf" accept="application/pdf" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-                <textarea id="f4" placeholder="Short Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
-            `;
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function openDestModal(item = null) {
-            activeType = 'dest'; activeId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Destination' : 'Add Destination';
-            document.getElementById('modalFields').innerHTML = `
-                <input type="text" id="f1" value="${item ? item.name : ''}" placeholder="Place Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.location : ''}" placeholder="District, Division" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <select id="f3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                    <option value="beach" ${item && item.category==='beach'?'selected':''}>Sea Beach</option>
-                    <option value="hills" ${item && item.category==='hills'?'selected':''}>Hills & Track</option>
-                    <option value="forest" ${item && item.category==='forest'?'selected':''}>Forest & Wildlife</option>
-                </select>
-                <div class="flex items-center gap-2 text-xs text-amber-400 my-1">
-                    <input type="checkbox" id="fIsTop" ${item && item.isTop ? 'checked' : ''}>
-                    <label for="fIsTop">Show in Top 10 Tourist Places Section</label>
-                </div>
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Main Photo (JPG/PNG File):</label>
-                    <input type="file" id="fileImg1" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select 2nd Photo (Optional):</label>
-                    <input type="file" id="fileImg2" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-                <textarea id="f7" placeholder="Short Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-12">${item ? item.shortDesc || item.desc || '' : ''}</textarea>
-                <textarea id="f8" placeholder="Full Detailed Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-20">${item ? item.fullDesc || '' : ''}</textarea>
-                <p class="text-[10px] text-amber-400 font-bold mt-2">Referral Hotel 1:</p>
-                <input type="text" id="fh1Name" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].name : ''}" placeholder="Hotel Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                <input type="text" id="fh1Link" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].link : ''}" placeholder="Booking Web Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-            `;
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function openCulturalModal(item = null) {
-            activeType = 'cultural'; activeId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Program' : 'Add Program';
-            document.getElementById('modalFields').innerHTML = `
-                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Program Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.date : ''}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Program Photo (JPG/PNG):</label>
-                    <input type="file" id="fileImg" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-                <textarea id="f4" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
-            `;
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function openBoardMemberModal() {
-            activeType = 'board'; activeId = null;
-            document.getElementById('modalTitle').innerText = 'Add Board Member';
-            document.getElementById('modalFields').innerHTML = `
-                <input type="text" id="f1" placeholder="Member Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" placeholder="Designation / Role" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <div>
-                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Member Photo (JPG/PNG):</label>
-                    <input type="file" id="fileImg" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-                </div>
-            `;
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function editSlider(id) { openSliderModal(sliders.find(s => s.id === id)); }
-        function deleteSlider(id) { sliders = sliders.filter(s => s.id !== id); saveAll(); }
-        function editNotice(id) { openNoticeModal(notices.find(n => n.id === id)); }
-        function deleteNotice(id) { notices = notices.filter(n => n.id !== id); saveAll(); }
-        function editDest(id) { openDestModal(destinations.find(d => d.id === id)); }
-        function deleteDest(id) { destinations = destinations.filter(d => d.id !== id); saveAll(); }
-        function editCultural(id) { openCulturalModal(culturals.find(c => c.id === id)); }
-        function deleteCultural(id) { culturals = culturals.filter(c => c.id !== id); saveAll(); }
-        function deleteBoard(id) { boardMembers = boardMembers.filter(b => b.id !== id); saveAll(); }
-
-        async function saveModalData() {
-            const v1 = document.getElementById('f1') ? document.getElementById('f1').value : '';
-            const v2 = document.getElementById('f2') ? document.getElementById('f2').value : '';
-
-            if (activeType === 'slider') {
-                const fileInp = document.getElementById('fileVideo');
-                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
-                const oldObj = sliders.find(s => s.id === activeId);
-                const videoUrl = fileData || (oldObj ? oldObj.video : '');
-
-                if (activeId) { const i = sliders.findIndex(s => s.id === activeId); sliders[i] = { id: activeId, title: v1, sub: v2, video: videoUrl }; }
-                else sliders.unshift({ id: Date.now(), title: v1, sub: v2, video: videoUrl });
-
-            } else if (activeType === 'notice') {
-                const fileInp = document.getElementById('filePdf');
-                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
-                const oldObj = notices.find(n => n.id === activeId);
-                const pdfUrl = fileData || (oldObj ? oldObj.pdfUrl : '');
-                const v4 = document.getElementById('f4').value;
-
-                if (activeId) { const i = notices.findIndex(n => n.id === activeId); notices[i] = { id: activeId, title: v1, date: v2, pdfUrl, desc: v4 }; }
-                else notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl, desc: v4 });
-
-            } else if (activeType === 'dest') {
-                const v3 = document.getElementById('f3').value;
-                const isTop = document.getElementById('fIsTop').checked;
-                
-                const fileInp1 = document.getElementById('fileImg1');
-                const fileInp2 = document.getElementById('fileImg2');
-                const img1Data = fileInp1 && fileInp1.files[0] ? await fileToBase64(fileInp1.files[0]) : '';
-                const img2Data = fileInp2 && fileInp2.files[0] ? await fileToBase64(fileInp2.files[0]) : '';
-
-                const oldObj = destinations.find(d => d.id === activeId);
-                const img1 = img1Data || (oldObj ? oldObj.img : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80');
-                const img2 = img2Data || (oldObj ? oldObj.img2 : '');
-
-                const v7 = document.getElementById('f7').value, v8 = document.getElementById('f8').value;
-                const h1Name = document.getElementById('fh1Name').value, h1Link = document.getElementById('fh1Link').value;
-                const hotelsArr = h1Name ? [{ name: h1Name, link: h1Link }] : [];
-
-                const itemData = { id: activeId || Date.now(), name: v1, location: v2, category: v3, isTop, img: img1, img2, video: '', shortDesc: v7, fullDesc: v8, hotels: hotelsArr };
-                if (activeId) { const i = destinations.findIndex(d => d.id === activeId); destinations[i] = itemData; }
-                else destinations.unshift(itemData);
-
-            } else if (activeType === 'cultural') {
-                const fileInp = document.getElementById('fileImg');
-                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
-                const oldObj = culturals.find(c => c.id === activeId);
-                const imgUrl = fileData || (oldObj ? oldObj.img : '');
-                const v4 = document.getElementById('f4').value;
-
-                if (activeId) { const i = culturals.findIndex(c => c.id === activeId); culturals[i] = { id: activeId, title: v1, date: v2, img: imgUrl, desc: v4 }; }
-                else culturals.unshift({ id: Date.now(), title: v1, date: v2, img: imgUrl, desc: v4 });
-
-            } else if (activeType === 'board') {
-                const fileInp = document.getElementById('fileImg');
-                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
-                boardMembers.unshift({ id: Date.now(), name: v1, role: v2, img: fileData || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' });
+        function deleteSlider(id) {
+            if(confirm("Are you sure you want to delete this slide?")) {
+                sliders = sliders.filter(s => s.id !== id);
+                localStorage.setItem('btb_sliders', JSON.stringify(sliders));
+                renderSlidersTable();
             }
-
-            closeModal();
-            saveAll();
         }
+
+        window.addEventListener('DOMContentLoaded', checkAuth);
     </script>
 </body>
 </html>
