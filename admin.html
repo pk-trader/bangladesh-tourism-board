@@ -3,89 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTB | Admin Control Center</title>
+    <title>BTB | Full CMS Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
-                extend: {
-                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
-                }
+                extend: { colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' } }
             }
         }
     </script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
 
-    <!-- Auth Protection Screen -->
+    <!-- Auth -->
     <div id="authOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
-            <div class="w-16 h-16 bg-emerald-950 border border-emerald-600/40 rounded-full flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-4">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <h2 class="text-2xl font-black text-white mb-1">BTB Control Center</h2>
-            <p class="text-xs text-slate-400 mb-6">Enter password to access dashboard (admin123).</p>
-            <input type="password" id="passInput" placeholder="Password (admin123)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm mb-3 focus:outline-none focus:border-emerald-500">
-            <p id="errorMsg" class="text-bdRed text-xs hidden mb-3">Wrong Password!</p>
-            <button onclick="checkPass()" class="w-full py-3 bg-bdGreen hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition">
-                Unlock Dashboard
-            </button>
+        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-sm w-full text-center">
+            <h2 class="text-2xl font-black text-white mb-2">BTB CMS Password</h2>
+            <input type="password" id="passInput" placeholder="Password (admin123)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm mb-3">
+            <button onclick="checkPass()" class="w-full py-3 bg-bdGreen text-white font-bold text-xs rounded-xl">Unlock Panel</button>
         </div>
     </div>
 
-    <!-- Main Dashboard Body -->
     <div id="adminApp" class="hidden">
-        <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-bdGreen rounded-full flex items-center justify-center text-amber-400 text-lg border border-amber-400">
-                        <i class="fa-solid fa-compass"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-extrabold text-white text-base">BTB Content Manager (CMS)</h1>
-                        <p class="text-[10px] text-emerald-400">Manage 64 Districts & Tourist Spots Easily</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <a href="index.html" target="_blank" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-emerald-400 border border-emerald-600/30">
-                        <i class="fa-solid fa-globe mr-1"></i> View Live Website
-                    </a>
-                    <button onclick="location.reload()" class="px-3 py-2 bg-red-950 text-bdRed border border-red-800/40 hover:bg-red-900 text-xs font-bold rounded-xl">Lock Exit</button>
-                </div>
-            </div>
+        <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-40 flex justify-between items-center">
+            <h1 class="font-bold text-white text-base"><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i> BTB Full Control Center</h1>
+            <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 text-xs font-bold text-emerald-400 rounded-lg border border-emerald-600/30">View Public Site <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 py-8 space-y-10">
-            <!-- NOTICES SECTION -->
-            <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
-                    <h2 class="text-lg font-bold text-bdRed flex items-center gap-2"><i class="fa-solid fa-bullhorn"></i> Official Notices & PDFs</h2>
-                    <button onclick="openNoticeModal()" class="px-4 py-2 bg-bdRed hover:bg-red-600 text-white text-xs font-bold rounded-xl transition">+ Add Notice</button>
+        <main class="max-w-7xl mx-auto p-6 space-y-10">
+            <!-- 1. SLIDERS MANAGER -->
+            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-emerald-400 text-base"><i class="fa-solid fa-images mr-2"></i> Hero Sliders (5 Slides)</h2>
+                    <button onclick="openSliderModal()" class="px-3 py-1.5 bg-bdGreen text-white text-xs font-bold rounded-lg">+ Add Slide</button>
                 </div>
-                <div id="adminNoticeList" class="space-y-3"></div>
+                <div id="sliderAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </section>
 
-            <!-- DESTINATIONS SECTION -->
-            <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
-                    <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-map-location-dot"></i> Tourist Destinations & Categories</h2>
-                    <button onclick="openDestModal()" class="px-4 py-2 bg-bdGreen hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition">+ Add Destination</button>
+            <!-- 2. NOTICES MANAGER -->
+            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-bdRed text-base"><i class="fa-solid fa-bullhorn mr-2"></i> Official Notices & PDFs</h2>
+                    <button onclick="openNoticeModal()" class="px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-lg">+ Add Notice</button>
                 </div>
-                <div id="adminDestList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                <div id="noticeAdminList" class="space-y-3"></div>
+            </section>
+
+            <!-- 3. DESTINATIONS & HOTELS MANAGER -->
+            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-amber-400 text-base"><i class="fa-solid fa-map-pin mr-2"></i> Destinations & Affiliate Hotels</h2>
+                    <button onclick="openDestModal()" class="px-3 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg">+ Add Tourist Spot</button>
+                </div>
+                <div id="destAdminList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </section>
+
+            <!-- 4. CULTURAL FAIRS MANAGER -->
+            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-purple-400 text-base"><i class="fa-solid fa-masks-theater mr-2"></i> Cultural Programs & Fairs</h2>
+                    <button onclick="openCulturalModal()" class="px-3 py-1.5 bg-purple-700 text-white text-xs font-bold rounded-lg">+ Add Cultural Program</button>
+                </div>
+                <div id="culturalAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </section>
+
+            <!-- 5. BOARD MEMBERS MANAGER -->
+            <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-blue-400 text-base"><i class="fa-solid fa-users mr-2"></i> Board Members</h2>
+                    <button onclick="openBoardMemberModal()" class="px-3 py-1.5 bg-blue-700 text-white text-xs font-bold rounded-lg">+ Add Member</button>
+                </div>
+                <div id="boardAdminList" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
             </section>
         </main>
     </div>
 
-    <!-- MODAL FORM -->
+    <!-- Dynamic Modal -->
     <div id="formModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-md w-full relative">
+        <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-lg w-full relative">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 id="modalTitle" class="text-lg font-extrabold text-white mb-4">Add Item</h3>
+            <h3 id="modalTitle" class="text-lg font-bold text-white mb-4">Edit Item</h3>
             <div id="modalFields" class="space-y-3"></div>
-            <button onclick="saveModalData()" class="w-full mt-5 py-3 bg-bdGreen hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition">Save & Publish</button>
+            <button onclick="saveModalData()" class="w-full mt-5 py-3 bg-bdGreen text-white font-bold text-xs rounded-xl">Save & Publish</button>
         </div>
     </div>
 
@@ -94,114 +95,181 @@
             if(document.getElementById('passInput').value === 'admin123') {
                 document.getElementById('authOverlay').classList.add('hidden');
                 document.getElementById('adminApp').classList.remove('hidden');
-                initAdminData();
-            } else {
-                document.getElementById('errorMsg').classList.remove('hidden');
+                renderAllAdmin();
             }
         }
 
-        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [
-            { id: 1, title: "Special Tourist Safety Guidelines for Winter Season 2026", date: "October 12, 2026", pdfUrl: "", desc: "All tourists traveling to hill districts and coastal areas are requested to follow official travel advisories." }
-        ];
+        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [];
+        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
+        let destinations = JSON.parse(localStorage.getItem('btb_dests')) || [];
+        let culturals = JSON.parse(localStorage.getItem('btb_culturals')) || [];
+        let boardMembers = JSON.parse(localStorage.getItem('btb_boards')) || [];
 
-        let destinations = JSON.parse(localStorage.getItem('btb_dests')) || [
-            { id: 1, name: "Cox's Bazar", location: "Chittagong Division", category: "beach", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80", desc: "World's longest natural sea beach stretching 120 km." }
-        ];
-
-        let activeType = '', activeEditId = null;
+        let activeType = '', activeId = null;
 
         function saveAll() {
+            localStorage.setItem('btb_sliders', JSON.stringify(sliders));
             localStorage.setItem('btb_notices', JSON.stringify(notices));
             localStorage.setItem('btb_dests', JSON.stringify(destinations));
-            initAdminData();
+            localStorage.setItem('btb_culturals', JSON.stringify(culturals));
+            localStorage.setItem('btb_boards', JSON.stringify(boardMembers));
+            renderAllAdmin();
         }
 
-        function initAdminData() {
-            document.getElementById('adminNoticeList').innerHTML = notices.map(n => `
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
-                    <div>
-                        <span class="text-[9px] bg-red-950 text-bdRed px-2 py-0.5 rounded font-bold">${n.date}</span>
-                        <h4 class="font-bold text-white text-sm mt-1">${n.title}</h4>
-                        <p class="text-xs text-slate-400">${n.desc}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="editNotice(${n.id})" class="p-2.5 bg-slate-800 text-emerald-400 rounded-xl text-xs"><i class="fa-solid fa-pencil"></i></button>
-                        <button onclick="deleteNotice(${n.id})" class="p-2.5 bg-slate-800 text-bdRed rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+        function renderAllAdmin() {
+            document.getElementById('sliderAdminList').innerHTML = sliders.map(s => `
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
+                    <div><h4 class="font-bold text-white text-sm">${s.title}</h4><p class="text-xs text-slate-400">${s.sub}</p></div>
+                    <div class="flex gap-2"><button onclick="editSlider(${s.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteSlider(${s.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
                 </div>
             `).join('');
 
-            document.getElementById('adminDestList').innerHTML = destinations.map(d => `
+            document.getElementById('noticeAdminList').innerHTML = notices.map(n => `
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
+                    <div><h4 class="font-bold text-white text-sm">${n.title}</h4><p class="text-xs text-slate-400">${n.date}</p></div>
+                    <div class="flex gap-2"><button onclick="editNotice(${n.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteNotice(${n.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
+                </div>
+            `).join('');
+
+            document.getElementById('destAdminList').innerHTML = destinations.map(d => `
                 <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <img src="${d.img}" class="w-full h-32 object-cover rounded-xl mb-3">
-                    <h4 class="font-bold text-white text-sm">${d.name}</h4>
+                    <img src="${d.img}" class="w-full h-28 object-cover rounded-xl mb-2">
+                    <h4 class="font-bold text-white text-sm">${d.name} ${d.isTop ? '<span class="text-[10px] text-amber-400 font-bold">(Top)</span>' : ''}</h4>
                     <p class="text-xs text-emerald-400">${d.location} (${d.category})</p>
                     <div class="flex justify-end gap-2 mt-3 pt-2 border-t border-slate-800">
-                        <button onclick="editDest(${d.id})" class="px-3 py-1.5 bg-slate-800 text-emerald-400 rounded-lg text-xs font-bold"><i class="fa-solid fa-pencil mr-1"></i> Edit</button>
-                        <button onclick="deleteDest(${d.id})" class="px-3 py-1.5 bg-slate-800 text-bdRed rounded-lg text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                        <button onclick="editDest(${d.id})" class="px-3 py-1 bg-slate-800 text-emerald-400 text-xs rounded-lg font-bold">Edit</button>
+                        <button onclick="deleteDest(${d.id})" class="px-3 py-1 bg-slate-800 text-bdRed text-xs rounded-lg font-bold">Delete</button>
                     </div>
+                </div>
+            `).join('');
+
+            document.getElementById('culturalAdminList').innerHTML = culturals.map(c => `
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
+                    <div><h4 class="font-bold text-white text-sm">${c.title}</h4><p class="text-xs text-purple-400">${c.date}</p></div>
+                    <div class="flex gap-2"><button onclick="editCultural(${c.id})" class="p-2 bg-slate-800 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-pencil"></i></button><button onclick="deleteCultural(${c.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div>
+                </div>
+            `).join('');
+
+            document.getElementById('boardAdminList').innerHTML = boardMembers.map(b => `
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2"><img src="${b.img}" class="w-10 h-10 rounded-full object-cover"><div><h4 class="font-bold text-white text-xs">${b.name}</h4><p class="text-[10px] text-slate-400">${b.role}</p></div></div>
+                    <button onclick="deleteBoard(${b.id})" class="p-2 bg-slate-800 text-bdRed rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
         }
 
-        function deleteNotice(id) { notices = notices.filter(n => n.id !== id); saveAll(); }
-        function deleteDest(id) { destinations = destinations.filter(d => d.id !== id); saveAll(); }
         function closeModal() { document.getElementById('formModal').classList.add('hidden'); }
 
+        function openSliderModal(item = null) {
+            activeType = 'slider'; activeId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Slide' : 'Add New Slide';
+            document.getElementById('modalFields').innerHTML = `
+                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Slide Main Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" value="${item ? item.sub : ''}" placeholder="Subtitle / Tagline" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f3" value="${item ? item.video : ''}" placeholder="Background Video MP4 URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+            `;
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
         function openNoticeModal(item = null) {
-            activeType = 'notice'; activeEditId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Notice' : 'Add New Notice';
+            activeType = 'notice'; activeId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Notice' : 'Add Notice';
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Notice Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.date : 'October 13, 2026'}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f3" value="${item ? item.pdfUrl : ''}" placeholder="PDF Link (Direct URL)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <textarea id="f4" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-20">${item ? item.desc : ''}</textarea>
+                <input type="text" id="f2" value="${item ? item.date : 'Oct 13, 2026'}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f3" value="${item ? item.pdfUrl : ''}" placeholder="PDF Direct Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <textarea id="f4" placeholder="Short Desc" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
 
         function openDestModal(item = null) {
-            activeType = 'dest'; activeEditId = item ? item.id : null;
-            document.getElementById('modalTitle').innerText = item ? 'Edit Destination' : 'Add New Destination';
+            activeType = 'dest'; activeId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Destination' : 'Add Destination';
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" value="${item ? item.name : ''}" placeholder="Place Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f2" value="${item ? item.location : ''}" placeholder="District / Division" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" value="${item ? item.location : ''}" placeholder="District, Division" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
                 <select id="f3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                    <option value="beach" ${item && item.category==='beach'?'selected':''}>🏖️ Beach & Sea</option>
-                    <option value="hills" ${item && item.category==='hills'?'selected':''}>⛰️ Hills & Valleys</option>
-                    <option value="forest" ${item && item.category==='forest'?'selected':''}>🐅 Forest & Wildlife</option>
+                    <option value="beach" ${item && item.category==='beach'?'selected':''}>Sea Beach</option>
+                    <option value="hills" ${item && item.category==='hills'?'selected':''}>Hills & Track</option>
+                    <option value="forest" ${item && item.category==='forest'?'selected':''}>Forest & Wildlife</option>
                 </select>
-                <input type="text" id="f4" value="${item ? item.img : ''}" placeholder="Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <textarea id="f5" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
+                <div class="flex items-center gap-2 text-xs text-amber-400 my-1">
+                    <input type="checkbox" id="fIsTop" ${item && item.isTop ? 'checked' : ''}>
+                    <label for="fIsTop">Show in Top 10 Tourist Places Section</label>
+                </div>
+                <input type="text" id="f4" value="${item ? item.img : ''}" placeholder="Image 1 URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f5" value="${item ? item.img2 || '' : ''}" placeholder="Image 2 URL (Optional)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f6" value="${item ? item.video || '' : ''}" placeholder="Video MP4 URL (Optional)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <textarea id="f7" placeholder="Short Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-12">${item ? item.shortDesc || item.desc || '' : ''}</textarea>
+                <textarea id="f8" placeholder="Full Detailed Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-20">${item ? item.fullDesc || '' : ''}</textarea>
+                <p class="text-[10px] text-amber-400 font-bold mt-2">Referral Hotel 1:</p>
+                <input type="text" id="fh1Name" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].name : ''}" placeholder="Hotel 1 Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                <input type="text" id="fh1Link" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].link : ''}" placeholder="Hotel 1 Booking Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
 
+        function openCulturalModal(item = null) {
+            activeType = 'cultural'; activeId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Program' : 'Add Program';
+            document.getElementById('modalFields').innerHTML = `
+                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Program Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" value="${item ? item.date : ''}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f3" value="${item ? item.img : ''}" placeholder="Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <textarea id="f4" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
+            `;
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
+        function openBoardMemberModal() {
+            activeType = 'board'; activeId = null;
+            document.getElementById('modalTitle').innerText = 'Add Board Member';
+            document.getElementById('modalFields').innerHTML = `
+                <input type="text" id="f1" placeholder="Member Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" placeholder="Designation / Role" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f3" placeholder="Photo Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+            `;
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
+        function editSlider(id) { openSliderModal(sliders.find(s => s.id === id)); }
+        function deleteSlider(id) { sliders = sliders.filter(s => s.id !== id); saveAll(); }
         function editNotice(id) { openNoticeModal(notices.find(n => n.id === id)); }
+        function deleteNotice(id) { notices = notices.filter(n => n.id !== id); saveAll(); }
         function editDest(id) { openDestModal(destinations.find(d => d.id === id)); }
+        function deleteDest(id) { destinations = destinations.filter(d => d.id !== id); saveAll(); }
+        function editCultural(id) { openCulturalModal(culturals.find(c => c.id === id)); }
+        function deleteCultural(id) { culturals = culturals.filter(c => c.id !== id); saveAll(); }
+        function deleteBoard(id) { boardMembers = boardMembers.filter(b => b.id !== id); saveAll(); }
 
         function saveModalData() {
-            const v1 = document.getElementById('f1').value;
-            const v2 = document.getElementById('f2').value;
-            const v3 = document.getElementById('f3').value;
-            const v4 = document.getElementById('f4').value;
-            const v5 = document.getElementById('f5') ? document.getElementById('f5').value : '';
+            const v1 = document.getElementById('f1') ? document.getElementById('f1').value : '';
+            const v2 = document.getElementById('f2') ? document.getElementById('f2').value : '';
+            const v3 = document.getElementById('f3') ? document.getElementById('f3').value : '';
+            const v4 = document.getElementById('f4') ? document.getElementById('f4').value : '';
 
-            if(activeType === 'notice') {
-                if(activeEditId) {
-                    const idx = notices.findIndex(n => n.id === activeEditId);
-                    notices[idx] = { id: activeEditId, title: v1, date: v2, pdfUrl: v3, desc: v4 };
-                } else {
-                    notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl: v3, desc: v4 });
-                }
-            } else if(activeType === 'dest') {
-                if(activeEditId) {
-                    const idx = destinations.findIndex(d => d.id === activeEditId);
-                    destinations[idx] = { id: activeEditId, name: v1, location: v2, category: v3, img: v4, desc: v5 };
-                } else {
-                    destinations.unshift({ id: Date.now(), name: v1, location: v2, category: v3, img: v4, desc: v5 });
-                }
+            if (activeType === 'slider') {
+                if (activeId) { const i = sliders.findIndex(s => s.id === activeId); sliders[i] = { id: activeId, title: v1, sub: v2, video: v3 }; }
+                else sliders.unshift({ id: Date.now(), title: v1, sub: v2, video: v3 });
+            } else if (activeType === 'notice') {
+                if (activeId) { const i = notices.findIndex(n => n.id === activeId); notices[i] = { id: activeId, title: v1, date: v2, pdfUrl: v3, desc: v4 }; }
+                else notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl: v3, desc: v4 });
+            } else if (activeType === 'dest') {
+                const isTop = document.getElementById('fIsTop').checked;
+                const v5 = document.getElementById('f5').value, v6 = document.getElementById('f6').value, v7 = document.getElementById('f7').value, v8 = document.getElementById('f8').value;
+                const h1Name = document.getElementById('fh1Name').value, h1Link = document.getElementById('fh1Link').value;
+                const hotelsArr = h1Name ? [{ name: h1Name, link: h1Link }] : [];
+                const itemData = { id: activeId || Date.now(), name: v1, location: v2, category: v3, isTop, img: v4, img2: v5, video: v6, shortDesc: v7, fullDesc: v8, hotels: hotelsArr };
+                if (activeId) { const i = destinations.findIndex(d => d.id === activeId); destinations[i] = itemData; }
+                else destinations.unshift(itemData);
+            } else if (activeType === 'cultural') {
+                if (activeId) { const i = culturals.findIndex(c => c.id === activeId); culturals[i] = { id: activeId, title: v1, date: v2, img: v3, desc: v4 }; }
+                else culturals.unshift({ id: Date.now(), title: v1, date: v2, img: v3, desc: v4 });
+            } else if (activeType === 'board') {
+                boardMembers.unshift({ id: Date.now(), name: v1, role: v2, img: v3 });
             }
+
             closeModal();
             saveAll();
         }
