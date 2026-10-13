@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTB | Full CMS Control Panel</title>
+    <title>BTB | Direct File Upload CMS Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
 
     <div id="adminApp" class="hidden">
         <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-40 flex justify-between items-center">
-            <h1 class="font-bold text-white text-base"><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i> BTB Full Control Center</h1>
+            <h1 class="font-bold text-white text-base"><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i> BTB Direct File Manager</h1>
             <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 text-xs font-bold text-emerald-400 rounded-lg border border-emerald-600/30">View Public Site <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
         </header>
 
@@ -36,7 +36,7 @@
             <!-- 1. SLIDERS MANAGER -->
             <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-emerald-400 text-base"><i class="fa-solid fa-images mr-2"></i> Hero Sliders (5 Slides)</h2>
+                    <h2 class="font-bold text-emerald-400 text-base"><i class="fa-solid fa-images mr-2"></i> Hero Sliders (Direct Video Upload)</h2>
                     <button onclick="openSliderModal()" class="px-3 py-1.5 bg-bdGreen text-white text-xs font-bold rounded-lg">+ Add Slide</button>
                 </div>
                 <div id="sliderAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
@@ -45,7 +45,7 @@
             <!-- 2. NOTICES MANAGER -->
             <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-bdRed text-base"><i class="fa-solid fa-bullhorn mr-2"></i> Official Notices & PDFs</h2>
+                    <h2 class="font-bold text-bdRed text-base"><i class="fa-solid fa-bullhorn mr-2"></i> Official Notices (Direct PDF Upload)</h2>
                     <button onclick="openNoticeModal()" class="px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-lg">+ Add Notice</button>
                 </div>
                 <div id="noticeAdminList" class="space-y-3"></div>
@@ -54,7 +54,7 @@
             <!-- 3. DESTINATIONS & HOTELS MANAGER -->
             <section class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-amber-400 text-base"><i class="fa-solid fa-map-pin mr-2"></i> Destinations & Affiliate Hotels</h2>
+                    <h2 class="font-bold text-amber-400 text-base"><i class="fa-solid fa-map-pin mr-2"></i> Destinations (Direct Image Upload)</h2>
                     <button onclick="openDestModal()" class="px-3 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg">+ Add Tourist Spot</button>
                 </div>
                 <div id="destAdminList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -106,6 +106,17 @@
         let boardMembers = JSON.parse(localStorage.getItem('btb_boards')) || [];
 
         let activeType = '', activeId = null;
+
+        // Helper Function: Convert File Input to Base64 Data URL
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                if(!file) { resolve(''); return; }
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
 
         function saveAll() {
             localStorage.setItem('btb_sliders', JSON.stringify(sliders));
@@ -166,7 +177,10 @@
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Slide Main Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
                 <input type="text" id="f2" value="${item ? item.sub : ''}" placeholder="Subtitle / Tagline" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f3" value="${item ? item.video : ''}" placeholder="Background Video MP4 URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select MP4 Video File (Direct Upload):</label>
+                    <input type="file" id="fileVideo" accept="video/mp4,video/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
@@ -177,8 +191,11 @@
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Notice Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
                 <input type="text" id="f2" value="${item ? item.date : 'Oct 13, 2026'}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f3" value="${item ? item.pdfUrl : ''}" placeholder="PDF Direct Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <textarea id="f4" placeholder="Short Desc" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select PDF Notice File (Direct Upload):</label>
+                    <input type="file" id="filePdf" accept="application/pdf" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
+                <textarea id="f4" placeholder="Short Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
@@ -198,14 +215,19 @@
                     <input type="checkbox" id="fIsTop" ${item && item.isTop ? 'checked' : ''}>
                     <label for="fIsTop">Show in Top 10 Tourist Places Section</label>
                 </div>
-                <input type="text" id="f4" value="${item ? item.img : ''}" placeholder="Image 1 URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f5" value="${item ? item.img2 || '' : ''}" placeholder="Image 2 URL (Optional)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f6" value="${item ? item.video || '' : ''}" placeholder="Video MP4 URL (Optional)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Main Photo (JPG/PNG File):</label>
+                    <input type="file" id="fileImg1" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select 2nd Photo (Optional):</label>
+                    <input type="file" id="fileImg2" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
                 <textarea id="f7" placeholder="Short Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-12">${item ? item.shortDesc || item.desc || '' : ''}</textarea>
                 <textarea id="f8" placeholder="Full Detailed Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-20">${item ? item.fullDesc || '' : ''}</textarea>
                 <p class="text-[10px] text-amber-400 font-bold mt-2">Referral Hotel 1:</p>
-                <input type="text" id="fh1Name" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].name : ''}" placeholder="Hotel 1 Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                <input type="text" id="fh1Link" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].link : ''}" placeholder="Hotel 1 Booking Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                <input type="text" id="fh1Name" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].name : ''}" placeholder="Hotel Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                <input type="text" id="fh1Link" value="${item && item.hotels && item.hotels[0] ? item.hotels[0].link : ''}" placeholder="Booking Web Link" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
@@ -216,7 +238,10 @@
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Program Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
                 <input type="text" id="f2" value="${item ? item.date : ''}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f3" value="${item ? item.img : ''}" placeholder="Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Program Photo (JPG/PNG):</label>
+                    <input type="file" id="fileImg" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
                 <textarea id="f4" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
             `;
             document.getElementById('formModal').classList.remove('hidden');
@@ -228,7 +253,10 @@
             document.getElementById('modalFields').innerHTML = `
                 <input type="text" id="f1" placeholder="Member Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
                 <input type="text" id="f2" placeholder="Designation / Role" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
-                <input type="text" id="f3" placeholder="Photo Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1">Select Member Photo (JPG/PNG):</label>
+                    <input type="file" id="fileImg" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                </div>
             `;
             document.getElementById('formModal').classList.remove('hidden');
         }
@@ -243,31 +271,64 @@
         function deleteCultural(id) { culturals = culturals.filter(c => c.id !== id); saveAll(); }
         function deleteBoard(id) { boardMembers = boardMembers.filter(b => b.id !== id); saveAll(); }
 
-        function saveModalData() {
+        async function saveModalData() {
             const v1 = document.getElementById('f1') ? document.getElementById('f1').value : '';
             const v2 = document.getElementById('f2') ? document.getElementById('f2').value : '';
-            const v3 = document.getElementById('f3') ? document.getElementById('f3').value : '';
-            const v4 = document.getElementById('f4') ? document.getElementById('f4').value : '';
 
             if (activeType === 'slider') {
-                if (activeId) { const i = sliders.findIndex(s => s.id === activeId); sliders[i] = { id: activeId, title: v1, sub: v2, video: v3 }; }
-                else sliders.unshift({ id: Date.now(), title: v1, sub: v2, video: v3 });
+                const fileInp = document.getElementById('fileVideo');
+                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
+                const oldObj = sliders.find(s => s.id === activeId);
+                const videoUrl = fileData || (oldObj ? oldObj.video : '');
+
+                if (activeId) { const i = sliders.findIndex(s => s.id === activeId); sliders[i] = { id: activeId, title: v1, sub: v2, video: videoUrl }; }
+                else sliders.unshift({ id: Date.now(), title: v1, sub: v2, video: videoUrl });
+
             } else if (activeType === 'notice') {
-                if (activeId) { const i = notices.findIndex(n => n.id === activeId); notices[i] = { id: activeId, title: v1, date: v2, pdfUrl: v3, desc: v4 }; }
-                else notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl: v3, desc: v4 });
+                const fileInp = document.getElementById('filePdf');
+                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
+                const oldObj = notices.find(n => n.id === activeId);
+                const pdfUrl = fileData || (oldObj ? oldObj.pdfUrl : '');
+                const v4 = document.getElementById('f4').value;
+
+                if (activeId) { const i = notices.findIndex(n => n.id === activeId); notices[i] = { id: activeId, title: v1, date: v2, pdfUrl, desc: v4 }; }
+                else notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl, desc: v4 });
+
             } else if (activeType === 'dest') {
+                const v3 = document.getElementById('f3').value;
                 const isTop = document.getElementById('fIsTop').checked;
-                const v5 = document.getElementById('f5').value, v6 = document.getElementById('f6').value, v7 = document.getElementById('f7').value, v8 = document.getElementById('f8').value;
+                
+                const fileInp1 = document.getElementById('fileImg1');
+                const fileInp2 = document.getElementById('fileImg2');
+                const img1Data = fileInp1 && fileInp1.files[0] ? await fileToBase64(fileInp1.files[0]) : '';
+                const img2Data = fileInp2 && fileInp2.files[0] ? await fileToBase64(fileInp2.files[0]) : '';
+
+                const oldObj = destinations.find(d => d.id === activeId);
+                const img1 = img1Data || (oldObj ? oldObj.img : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80');
+                const img2 = img2Data || (oldObj ? oldObj.img2 : '');
+
+                const v7 = document.getElementById('f7').value, v8 = document.getElementById('f8').value;
                 const h1Name = document.getElementById('fh1Name').value, h1Link = document.getElementById('fh1Link').value;
                 const hotelsArr = h1Name ? [{ name: h1Name, link: h1Link }] : [];
-                const itemData = { id: activeId || Date.now(), name: v1, location: v2, category: v3, isTop, img: v4, img2: v5, video: v6, shortDesc: v7, fullDesc: v8, hotels: hotelsArr };
+
+                const itemData = { id: activeId || Date.now(), name: v1, location: v2, category: v3, isTop, img: img1, img2, video: '', shortDesc: v7, fullDesc: v8, hotels: hotelsArr };
                 if (activeId) { const i = destinations.findIndex(d => d.id === activeId); destinations[i] = itemData; }
                 else destinations.unshift(itemData);
+
             } else if (activeType === 'cultural') {
-                if (activeId) { const i = culturals.findIndex(c => c.id === activeId); culturals[i] = { id: activeId, title: v1, date: v2, img: v3, desc: v4 }; }
-                else culturals.unshift({ id: Date.now(), title: v1, date: v2, img: v3, desc: v4 });
+                const fileInp = document.getElementById('fileImg');
+                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
+                const oldObj = culturals.find(c => c.id === activeId);
+                const imgUrl = fileData || (oldObj ? oldObj.img : '');
+                const v4 = document.getElementById('f4').value;
+
+                if (activeId) { const i = culturals.findIndex(c => c.id === activeId); culturals[i] = { id: activeId, title: v1, date: v2, img: imgUrl, desc: v4 }; }
+                else culturals.unshift({ id: Date.now(), title: v1, date: v2, img: imgUrl, desc: v4 });
+
             } else if (activeType === 'board') {
-                boardMembers.unshift({ id: Date.now(), name: v1, role: v2, img: v3 });
+                const fileInp = document.getElementById('fileImg');
+                const fileData = fileInp && fileInp.files[0] ? await fileToBase64(fileInp.files[0]) : '';
+                boardMembers.unshift({ id: Date.now(), name: v1, role: v2, img: fileData || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' });
             }
 
             closeModal();
