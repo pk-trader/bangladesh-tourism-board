@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTB | Admin Control Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+    <!-- Auth Protection Screen -->
+    <div id="authOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+            <div class="w-16 h-16 bg-emerald-950 border border-emerald-600/40 rounded-full flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="text-2xl font-black text-white mb-1">BTB Control Center</h2>
+            <p class="text-xs text-slate-400 mb-6">Enter password to access dashboard (admin123).</p>
+            <input type="password" id="passInput" placeholder="Password (admin123)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm mb-3 focus:outline-none focus:border-emerald-500">
+            <p id="errorMsg" class="text-bdRed text-xs hidden mb-3">Wrong Password!</p>
+            <button onclick="checkPass()" class="w-full py-3 bg-bdGreen hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition">
+                Unlock Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Body -->
+    <div id="adminApp" class="hidden">
+        <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-bdGreen rounded-full flex items-center justify-center text-amber-400 text-lg border border-amber-400">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-white text-base">BTB Content Manager (CMS)</h1>
+                        <p class="text-[10px] text-emerald-400">Manage 64 Districts & Tourist Spots Easily</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" target="_blank" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-emerald-400 border border-emerald-600/30">
+                        <i class="fa-solid fa-globe mr-1"></i> View Live Website
+                    </a>
+                    <button onclick="location.reload()" class="px-3 py-2 bg-red-950 text-bdRed border border-red-800/40 hover:bg-red-900 text-xs font-bold rounded-xl">Lock Exit</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 space-y-10">
+            <!-- NOTICES SECTION -->
+            <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                    <h2 class="text-lg font-bold text-bdRed flex items-center gap-2"><i class="fa-solid fa-bullhorn"></i> Official Notices & PDFs</h2>
+                    <button onclick="openNoticeModal()" class="px-4 py-2 bg-bdRed hover:bg-red-600 text-white text-xs font-bold rounded-xl transition">+ Add Notice</button>
+                </div>
+                <div id="adminNoticeList" class="space-y-3"></div>
+            </section>
+
+            <!-- DESTINATIONS SECTION -->
+            <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                    <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-map-location-dot"></i> Tourist Destinations & Categories</h2>
+                    <button onclick="openDestModal()" class="px-4 py-2 bg-bdGreen hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition">+ Add Destination</button>
+                </div>
+                <div id="adminDestList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL FORM -->
+    <div id="formModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-md w-full relative">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 id="modalTitle" class="text-lg font-extrabold text-white mb-4">Add Item</h3>
+            <div id="modalFields" class="space-y-3"></div>
+            <button onclick="saveModalData()" class="w-full mt-5 py-3 bg-bdGreen hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition">Save & Publish</button>
+        </div>
+    </div>
+
+    <script>
+        function checkPass() {
+            if(document.getElementById('passInput').value === 'admin123') {
+                document.getElementById('authOverlay').classList.add('hidden');
+                document.getElementById('adminApp').classList.remove('hidden');
+                initAdminData();
+            } else {
+                document.getElementById('errorMsg').classList.remove('hidden');
+            }
+        }
+
+        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [
+            { id: 1, title: "Special Tourist Safety Guidelines for Winter Season 2026", date: "October 12, 2026", pdfUrl: "", desc: "All tourists traveling to hill districts and coastal areas are requested to follow official travel advisories." }
+        ];
+
+        let destinations = JSON.parse(localStorage.getItem('btb_dests')) || [
+            { id: 1, name: "Cox's Bazar", location: "Chittagong Division", category: "beach", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80", desc: "World's longest natural sea beach stretching 120 km." }
+        ];
+
+        let activeType = '', activeEditId = null;
+
+        function saveAll() {
+            localStorage.setItem('btb_notices', JSON.stringify(notices));
+            localStorage.setItem('btb_dests', JSON.stringify(destinations));
+            initAdminData();
+        }
+
+        function initAdminData() {
+            document.getElementById('adminNoticeList').innerHTML = notices.map(n => `
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
+                    <div>
+                        <span class="text-[9px] bg-red-950 text-bdRed px-2 py-0.5 rounded font-bold">${n.date}</span>
+                        <h4 class="font-bold text-white text-sm mt-1">${n.title}</h4>
+                        <p class="text-xs text-slate-400">${n.desc}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="editNotice(${n.id})" class="p-2.5 bg-slate-800 text-emerald-400 rounded-xl text-xs"><i class="fa-solid fa-pencil"></i></button>
+                        <button onclick="deleteNotice(${n.id})" class="p-2.5 bg-slate-800 text-bdRed rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('adminDestList').innerHTML = destinations.map(d => `
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <img src="${d.img}" class="w-full h-32 object-cover rounded-xl mb-3">
+                    <h4 class="font-bold text-white text-sm">${d.name}</h4>
+                    <p class="text-xs text-emerald-400">${d.location} (${d.category})</p>
+                    <div class="flex justify-end gap-2 mt-3 pt-2 border-t border-slate-800">
+                        <button onclick="editDest(${d.id})" class="px-3 py-1.5 bg-slate-800 text-emerald-400 rounded-lg text-xs font-bold"><i class="fa-solid fa-pencil mr-1"></i> Edit</button>
+                        <button onclick="deleteDest(${d.id})" class="px-3 py-1.5 bg-slate-800 text-bdRed rounded-lg text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteNotice(id) { notices = notices.filter(n => n.id !== id); saveAll(); }
+        function deleteDest(id) { destinations = destinations.filter(d => d.id !== id); saveAll(); }
+        function closeModal() { document.getElementById('formModal').classList.add('hidden'); }
+
+        function openNoticeModal(item = null) {
+            activeType = 'notice'; activeEditId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Notice' : 'Add New Notice';
+            document.getElementById('modalFields').innerHTML = `
+                <input type="text" id="f1" value="${item ? item.title : ''}" placeholder="Notice Title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" value="${item ? item.date : 'October 13, 2026'}" placeholder="Date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f3" value="${item ? item.pdfUrl : ''}" placeholder="PDF Link (Direct URL)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <textarea id="f4" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-20">${item ? item.desc : ''}</textarea>
+            `;
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
+        function openDestModal(item = null) {
+            activeType = 'dest'; activeEditId = item ? item.id : null;
+            document.getElementById('modalTitle').innerText = item ? 'Edit Destination' : 'Add New Destination';
+            document.getElementById('modalFields').innerHTML = `
+                <input type="text" id="f1" value="${item ? item.name : ''}" placeholder="Place Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <input type="text" id="f2" value="${item ? item.location : ''}" placeholder="District / Division" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <select id="f3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                    <option value="beach" ${item && item.category==='beach'?'selected':''}>🏖️ Beach & Sea</option>
+                    <option value="hills" ${item && item.category==='hills'?'selected':''}>⛰️ Hills & Valleys</option>
+                    <option value="forest" ${item && item.category==='forest'?'selected':''}>🐅 Forest & Wildlife</option>
+                </select>
+                <input type="text" id="f4" value="${item ? item.img : ''}" placeholder="Image URL" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">
+                <textarea id="f5" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white h-16">${item ? item.desc : ''}</textarea>
+            `;
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
+        function editNotice(id) { openNoticeModal(notices.find(n => n.id === id)); }
+        function editDest(id) { openDestModal(destinations.find(d => d.id === id)); }
+
+        function saveModalData() {
+            const v1 = document.getElementById('f1').value;
+            const v2 = document.getElementById('f2').value;
+            const v3 = document.getElementById('f3').value;
+            const v4 = document.getElementById('f4').value;
+            const v5 = document.getElementById('f5') ? document.getElementById('f5').value : '';
+
+            if(activeType === 'notice') {
+                if(activeEditId) {
+                    const idx = notices.findIndex(n => n.id === activeEditId);
+                    notices[idx] = { id: activeEditId, title: v1, date: v2, pdfUrl: v3, desc: v4 };
+                } else {
+                    notices.unshift({ id: Date.now(), title: v1, date: v2, pdfUrl: v3, desc: v4 });
+                }
+            } else if(activeType === 'dest') {
+                if(activeEditId) {
+                    const idx = destinations.findIndex(d => d.id === activeEditId);
+                    destinations[idx] = { id: activeEditId, name: v1, location: v2, category: v3, img: v4, desc: v5 };
+                } else {
+                    destinations.unshift({ id: Date.now(), name: v1, location: v2, category: v3, img: v4, desc: v5 });
+                }
+            }
+            closeModal();
+            saveAll();
+        }
+    </script>
+</body>
+</html>
