@@ -25,16 +25,16 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center text-emerald-300">
             <span class="flex items-center gap-2">
                 <span class="bg-bdRed text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase">Official Notice</span>
-                <span>Welcome to Bangladesh Tourism Board Portal</span>
+                <span class="truncate">Welcome to Bangladesh Tourism Board Portal</span>
             </span>
-            <div class="hidden sm:flex gap-4 text-[11px]">
+            <div class="hidden md:flex gap-4 text-[11px]">
                 <span><i class="fa-solid fa-phone text-bdRed"></i> +880 2 8391580</span>
                 <span><i class="fa-solid fa-envelope text-emerald-400"></i> info@tourismboard.gov.bd</span>
             </div>
         </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation Bar (Always Visible & Responsive) -->
     <nav class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-emerald-900/50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <a href="#home" class="flex items-center gap-2">
@@ -46,14 +46,31 @@
                     <div class="text-[9px] text-emerald-400 uppercase font-medium">Bangladesh Tourism Board</div>
                 </div>
             </a>
-            <div class="hidden lg:flex items-center gap-4 text-xs font-semibold">
+
+            <!-- Navigation Buttons (Desktop & Laptop) -->
+            <div class="hidden md:flex items-center gap-3 lg:gap-5 text-xs font-semibold">
                 <a href="#home" class="hover:text-emerald-400 transition">Home</a>
                 <a href="#destinations" class="hover:text-emerald-400 transition">Destinations</a>
-                <a href="#top-places" class="hover:text-emerald-400 transition">Top Tourist Places</a>
+                <a href="#top-places" class="hover:text-emerald-400 transition">Top Places</a>
                 <a href="#cultural-programs" class="hover:text-emerald-400 transition">Cultural Fairs</a>
                 <a href="#live-gps" class="text-bdRed hover:underline">Live GPS 📍</a>
-                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition">Board Members</button>
+                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition font-bold">Board Members</button>
             </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-white text-xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars" id="menuIcon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-slate-950 border-b border-emerald-900/50 px-4 py-3 space-y-2 text-xs font-semibold">
+            <a href="#home" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Home</a>
+            <a href="#destinations" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Destinations</a>
+            <a href="#top-places" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Top Places</a>
+            <a href="#cultural-programs" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Cultural Fairs</a>
+            <a href="#live-gps" onclick="toggleMobileMenu()" class="block py-1.5 text-bdRed">Live GPS 📍</a>
+            <button onclick="openBoardModal(); toggleMobileMenu();" class="w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg font-bold">Board Members</button>
         </div>
     </nav>
 
@@ -156,6 +173,17 @@
     </div>
 
     <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            menu.classList.toggle('hidden');
+            if(menu.classList.contains('hidden')) {
+                icon.className = 'fa-solid fa-bars';
+            } else {
+                icon.className = 'fa-solid fa-xmark';
+            }
+        }
+
         let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
             { id: 1, title: "BANGLADESH", sub: "Land of Rivers & Greens", video: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4" },
             { id: 2, title: "Cox's Bazar", sub: "World's Longest Beach", video: "https://assets.mixkit.co/videos/preview/mixkit-sea-waves-approaching-the-beach-1188-large.mp4" }
@@ -181,6 +209,10 @@
 
         function renderSliders() {
             const wrapper = document.getElementById('carouselWrapper');
+            if(!sliders || sliders.length === 0) {
+                wrapper.innerHTML = `<div class="h-full flex items-center justify-center text-slate-500 font-bold">No Sliders Added Yet</div>`;
+                return;
+            }
             wrapper.innerHTML = sliders.map((s, idx) => `
                 <div class="slide-item absolute inset-0 transition-opacity duration-700 ${idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
                     <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-50"><source src="${s.video}" type="video/mp4"></video>
@@ -196,8 +228,8 @@
             `).join('');
         }
 
-        function nextSlide() { currentSlide = (currentSlide + 1) % sliders.length; renderSliders(); }
-        function prevSlide() { currentSlide = (currentSlide - 1 + sliders.length) % sliders.length; renderSliders(); }
+        function nextSlide() { if(sliders.length > 0) { currentSlide = (currentSlide + 1) % sliders.length; renderSliders(); } }
+        function prevSlide() { if(sliders.length > 0) { currentSlide = (currentSlide - 1 + sliders.length) % sliders.length; renderSliders(); } }
         function setSlide(i) { currentSlide = i; renderSliders(); }
 
         function renderNotices() {
@@ -213,7 +245,6 @@
             `).join('');
         }
 
-        // DYNAMIC ACTIVE BUTTON FILTER FUNCTION
         function filterDestinations(cat) {
             const filterContainer = document.getElementById('categoryFilters');
             if (filterContainer) {
