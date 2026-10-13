@@ -59,14 +59,14 @@
         <!-- Main Dashboard Body -->
         <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-10">
             
-            <!-- SECTION 1: HERO SLIDERS MANAGEMENT -->
+            <!-- SECTION 1: HERO SLIDERS MANAGEMENT (Path / URL) -->
             <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
                         <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
                             <i class="fa-solid fa-film text-emerald-400"></i> Hero Video Sliders
                         </h2>
-                        <p class="text-xs text-slate-400">Manage home page video slides (Use file path for large video files)</p>
+                        <p class="text-xs text-slate-400">Manage home page hero videos using file paths (e.g. videos/slide1.mp4)</p>
                     </div>
                     <button onclick="openModal('sliderModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Add New Hero Slide
@@ -80,7 +80,7 @@
                                 <th class="py-3 px-2">ID</th>
                                 <th class="py-3 px-2">Title</th>
                                 <th class="py-3 px-2">Subtitle</th>
-                                <th class="py-3 px-2">Video Path / Source</th>
+                                <th class="py-3 px-2">Video Path</th>
                                 <th class="py-3 px-2 text-right">Action</th>
                             </tr>
                         </thead>
@@ -96,7 +96,7 @@
                         <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
                             <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Tourist Destinations
                         </h2>
-                        <p class="text-xs text-slate-400">Manage destination cards with direct image file upload</p>
+                        <p class="text-xs text-slate-400">Manage destination cards with direct cover image upload</p>
                     </div>
                     <button onclick="openModal('destModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Add Destination
@@ -119,10 +119,70 @@
                 </div>
             </section>
 
+            <!-- SECTION 3: NOTICE BOARD & PRESS RELEASES (Direct File Upload) -->
+            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn text-emerald-400"></i> Notice Board & News
+                        </h2>
+                        <p class="text-xs text-slate-400">Publish notices, travel advisories, and official circulars</p>
+                    </div>
+                    <button onclick="openModal('noticeModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Add Notice
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
+                                <th class="py-3 px-2">ID</th>
+                                <th class="py-3 px-2">Notice Title</th>
+                                <th class="py-3 px-2">Category</th>
+                                <th class="py-3 px-2">Date</th>
+                                <th class="py-3 px-2 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="noticeTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 4: CULTURAL FAIRS & FESTIVALS (Direct File Upload) -->
+            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days text-emerald-400"></i> Cultural Fairs & Festivals
+                        </h2>
+                        <p class="text-xs text-slate-400">Manage upcoming heritage events and tourism fairs</p>
+                    </div>
+                    <button onclick="openModal('eventModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Add Event / Fair
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
+                                <th class="py-3 px-2">ID</th>
+                                <th class="py-3 px-2">Event Title</th>
+                                <th class="py-3 px-2">Location</th>
+                                <th class="py-3 px-2">Event Date</th>
+                                <th class="py-3 px-2 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </section>
+
         </main>
     </div>
 
-    <!-- MODAL 1: HERO SLIDER (File Path / URL Input) -->
+    <!-- MODAL 1: HERO SLIDER -->
     <div id="sliderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
             <button onclick="closeModal('sliderModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -137,19 +197,17 @@
                     <label class="block text-xs font-bold text-slate-300 mb-1">Subtitle / Tagline:</label>
                     <input type="text" id="sliderSub" placeholder="e.g. Land of Greenery, Rivers & Endless Heritage" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                 </div>
-
                 <div>
                     <label class="block text-xs font-bold text-emerald-400 mb-1">Video File Path or Direct URL:</label>
                     <input type="text" id="sliderVideoUrl" placeholder="e.g. videos/cox's_bajar.mp4" required class="w-full bg-slate-950 border border-emerald-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                    <p class="text-[10px] text-slate-400 mt-1">প্রজেক্টের `videos` ফোল্ডারে ভিডিও রেখে নাম ও পাথ লিখে দাও (যেমন: videos/cox's_bajar.mp4)।</p>
+                    <p class="text-[10px] text-slate-400 mt-1">Project-er videos folder-e video rekhe path likhe daw (e.g. videos/cox's_bajar.mp4).</p>
                 </div>
-
                 <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Save & Publish Slide</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 2: DESTINATIONS (Direct File Upload) -->
+    <!-- MODAL 2: DESTINATIONS -->
     <div id="destModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
             <button onclick="closeModal('destModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -173,14 +231,67 @@
                     <label class="block text-xs font-bold text-slate-300 mb-1">District:</label>
                     <input type="text" id="destDistrict" placeholder="e.g. Rangamati" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                 </div>
-
-                <!-- DIRECT FILE UPLOAD FOR OTHER CONTENT -->
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Upload Cover Image (Direct Upload):</label>
                     <input type="file" id="destImageFile" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
                 </div>
-
                 <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Destination</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: NOTICE BOARD -->
+    <div id="noticeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('noticeModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white mb-4">Add Official Notice / News</h3>
+
+            <form onsubmit="saveNotice(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice Title:</label>
+                    <input type="text" id="noticeTitle" placeholder="e.g. Travel Advisory for Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Category:</label>
+                    <select id="noticeCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <option value="Press Release">Press Release</option>
+                        <option value="Travel Advisory">Travel Advisory</option>
+                        <option value="Circular">Official Circular</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice Attachment / PDF / Image (Direct Upload):</label>
+                    <input type="file" id="noticeFile" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Notice</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CULTURAL EVENTS -->
+    <div id="eventModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('eventModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white mb-4">Add Cultural Event / Fair</h3>
+
+            <form onsubmit="saveEvent(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Event Name:</label>
+                    <input type="text" id="eventName" placeholder="e.g. Rash Mela Festival" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Location:</label>
+                    <input type="text" id="eventLocation" placeholder="e.g. Dublar Char, Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Date:</label>
+                    <input type="date" id="eventDate" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Banner Image (Direct Upload):</label>
+                    <input type="file" id="eventImageFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Event</button>
             </form>
         </div>
     </div>
@@ -205,6 +316,8 @@
                 document.getElementById('dashboardContent').classList.remove('hidden');
                 renderSlidersTable();
                 renderDestinationsTable();
+                renderNoticeTable();
+                renderEventTable();
             } else {
                 document.getElementById('loginOverlay').classList.remove('hidden');
                 document.getElementById('dashboardContent').classList.add('hidden');
@@ -219,7 +332,16 @@
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // --- HERO SLIDER LOGIC ---
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // --- 1. HERO SLIDERS LOGIC ---
         let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
             { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/slide1.mp4" }
         ];
@@ -249,13 +371,7 @@
             const sub = document.getElementById('sliderSub').value;
             const videoUrlInput = document.getElementById('sliderVideoUrl').value.trim();
 
-            const newSlider = {
-                id: Date.now(),
-                title: title,
-                sub: sub,
-                video: videoUrlInput
-            };
-
+            const newSlider = { id: Date.now(), title: title, sub: sub, video: videoUrlInput };
             sliders.push(newSlider);
             localStorage.setItem('btb_sliders', JSON.stringify(sliders));
             renderSlidersTable();
@@ -263,8 +379,7 @@
 
             document.getElementById('sliderTitle').value = "";
             document.getElementById('sliderSub').value = "";
-                document.getElementById('sliderVideoUrl').value = "";
-
+            document.getElementById('sliderVideoUrl').value = "";
             alert("Hero Slide published successfully!");
         }
 
@@ -276,7 +391,7 @@
             }
         }
 
-        // --- DESTINATIONS DIRECT UPLOAD LOGIC ---
+        // --- 2. DESTINATIONS LOGIC ---
         let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
 
         function renderDestinationsTable() {
@@ -305,21 +420,12 @@
             const district = document.getElementById('destDistrict').value;
             const fileInput = document.getElementById('destImageFile');
 
-            if (!fileInput.files[0]) {
-                alert("Please select an image file!");
-                return;
+            let imageBase64 = "";
+            if (fileInput.files[0]) {
+                imageBase64 = await convertToBase64(fileInput.files[0]);
             }
 
-            const imageBase64 = await convertToBase64(fileInput.files[0]);
-
-            const newDest = {
-                id: Date.now(),
-                name: name,
-                category: category,
-                district: district,
-                image: imageBase64
-            };
-
+            const newDest = { id: Date.now(), name: name, category: category, district: district, image: imageBase64 };
             destinations.push(newDest);
             localStorage.setItem('btb_destinations', JSON.stringify(destinations));
             renderDestinationsTable();
@@ -328,17 +434,7 @@
             document.getElementById('destName').value = "";
             document.getElementById('destDistrict').value = "";
             fileInput.value = "";
-
             alert("Destination published successfully!");
-        }
-
-        function convertToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
         }
 
         function deleteDestination(id) {
@@ -346,6 +442,127 @@
                 destinations = destinations.filter(d => d.id !== id);
                 localStorage.setItem('btb_destinations', JSON.stringify(destinations));
                 renderDestinationsTable();
+            }
+        }
+
+        // --- 3. NOTICE BOARD LOGIC ---
+        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
+
+        function renderNoticeTable() {
+            const tbody = document.getElementById('noticeTableBody');
+            if(!notices || notices.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No notices published yet</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = notices.map(n => `
+                <tr>
+                    <td class="py-3 px-2 font-mono text-slate-400">#${n.id}</td>
+                    <td class="py-3 px-2 font-bold text-white">${n.title}</td>
+                    <td class="py-3 px-2 text-emerald-400 font-semibold text-[10px]">${n.category}</td>
+                    <td class="py-3 px-2 text-slate-300">${n.date}</td>
+                    <td class="py-3 px-2 text-right">
+                        <button onclick="deleteNotice(${n.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveNotice(e) {
+            e.preventDefault();
+            const title = document.getElementById('noticeTitle').value;
+            const category = document.getElementById('noticeCategory').value;
+            const fileInput = document.getElementById('noticeFile');
+
+            let noticeFileBase64 = "";
+            if (fileInput.files[0]) {
+                noticeFileBase64 = await convertToBase64(fileInput.files[0]);
+            }
+
+            const newNotice = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                date: new Date().toLocaleDateString(),
+                file: noticeFileBase64
+            };
+
+            notices.push(newNotice);
+            localStorage.setItem('btb_notices', JSON.stringify(notices));
+            renderNoticeTable();
+            closeModal('noticeModal');
+
+            document.getElementById('noticeTitle').value = "";
+            fileInput.value = "";
+            alert("Notice published successfully!");
+        }
+
+        function deleteNotice(id) {
+            if(confirm("Are you sure you want to delete this notice?")) {
+                notices = notices.filter(n => n.id !== id);
+                localStorage.setItem('btb_notices', JSON.stringify(notices));
+                renderNoticeTable();
+            }
+        }
+
+        // --- 4. CULTURAL EVENTS LOGIC ---
+        let events = JSON.parse(localStorage.getItem('btb_events')) || [];
+
+        function renderEventTable() {
+            const tbody = document.getElementById('eventTableBody');
+            if(!events || events.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No events added yet</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = events.map(e => `
+                <tr>
+                    <td class="py-3 px-2 font-mono text-slate-400">#${e.id}</td>
+                    <td class="py-3 px-2 font-bold text-white">${e.name}</td>
+                    <td class="py-3 px-2 text-slate-300">${e.location}</td>
+                    <td class="py-3 px-2 text-emerald-400 font-mono text-[11px]">${e.date}</td>
+                    <td class="py-3 px-2 text-right">
+                        <button onclick="deleteEvent(${e.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveEvent(e) {
+            e.preventDefault();
+            const name = document.getElementById('eventName').value;
+            const location = document.getElementById('eventLocation').value;
+            const date = document.getElementById('eventDate').value;
+            const fileInput = document.getElementById('eventImageFile');
+
+            let eventImgBase64 = "";
+            if (fileInput.files[0]) {
+                eventImgBase64 = await convertToBase64(fileInput.files[0]);
+            }
+
+            const newEvent = {
+                id: Date.now(),
+                name: name,
+                location: location,
+                date: date,
+                image: eventImgBase64
+            };
+
+            events.push(newEvent);
+            localStorage.setItem('btb_events', JSON.stringify(events));
+            renderEventTable();
+            closeModal('eventModal');
+
+            document.getElementById('eventName').value = "";
+            document.getElementById('eventLocation').value = "";
+            document.getElementById('eventDate').value = "";
+            fileInput.value = "";
+            alert("Cultural Event published successfully!");
+        }
+
+        function deleteEvent(id) {
+            if(confirm("Are you sure you want to delete this event?")) {
+                events = events.filter(e => e.id !== id);
+                localStorage.setItem('btb_events', JSON.stringify(events));
+                renderEventTable();
             }
         }
 
