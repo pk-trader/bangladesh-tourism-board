@@ -96,7 +96,7 @@
                         <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
                             <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Tourist Destinations & Nearby Hotels
                         </h2>
-                        <p class="text-xs text-slate-400">Manage destinations and attach multiple hotels with ratings and website links</p>
+                        <p class="text-xs text-slate-400">Manage destinations with descriptions, details and attached hotels</p>
                     </div>
                     <button onclick="openModal('destModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Add Destination
@@ -237,16 +237,16 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DESTINATIONS & UNLIMITED HOTELS WITH WEB LINK -->
+    <!-- MODAL 2: DESTINATIONS WITH DESCRIPTION & HOTELS -->
     <div id="destModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('destModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Destination & Nearby Hotels</h3>
+            <h3 class="text-base font-bold text-white mb-4">Add Destination, Descriptions & Hotels</h3>
 
             <form onsubmit="saveDestination(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Destination Name:</label>
-                    <input type="text" id="destName" placeholder="e.g. Cox's Bazar Sea Beach" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <input type="text" id="destName" placeholder="e.g. Cox's Bazar" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -263,6 +263,19 @@
                         <select id="destDistrict" required class="districtSelect w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"></select>
                     </div>
                 </div>
+
+                <!-- Short Description -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Short Description (Card view):</label>
+                    <input type="text" id="destShortDesc" placeholder="e.g. World's longest natural unbroken sandy sea beach." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <!-- Full Detailed Description -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Full Detailed Description (Popup view):</label>
+                    <textarea id="destFullDesc" placeholder="Write full history, beauty and travel guide..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 h-20 resize-none"></textarea>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Destination Cover Image:</label>
                     <input type="file" id="destImageFile" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
@@ -271,13 +284,11 @@
                 <!-- HOTELS & RESORTS SECTION -->
                 <div class="border-t border-slate-800 pt-4 mt-2">
                     <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-emerald-400"><i class="fa-solid fa-hotel mr-1"></i> Nearby Hotels & Resorts (With Website Link & Description):</label>
+                        <label class="block text-xs font-bold text-emerald-400"><i class="fa-solid fa-hotel mr-1"></i> Nearby Hotels & Resorts (With Website Link):</label>
                         <button type="button" onclick="addHotelRow()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-emerald-300 px-2.5 py-1 rounded-lg border border-slate-700 font-bold transition">+ Add Hotel</button>
                     </div>
                     
-                    <div id="hotelRowsContainer" class="space-y-3">
-                        <!-- Dynamic Hotel Rows will appear here -->
-                    </div>
+                    <div id="hotelRowsContainer" class="space-y-3"></div>
                 </div>
 
                 <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-4">Publish Destination & Hotels</button>
@@ -373,7 +384,6 @@
     <script>
         const AUTH_PASS = "admin123";
 
-        // 64 DISTRICTS OF BANGLADESH
         const bdDistricts = [
             "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogra", "Brahmanbaria", "Chandpur",
             "Chittagong", "Chuadanga", "Comilla", "Cox's Bazar", "Dhaka", "Dinajpur", "Faridpur", "Feni",
@@ -414,7 +424,7 @@
                 renderNoticeTable();
                 renderEventTable();
             } else {
-                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('loginOverlay').classList.remove('hidden');
                 document.getElementById('dashboardContent').classList.add('hidden');
             }
         }
@@ -441,7 +451,6 @@
             });
         }
 
-        // --- HOTEL ROWS INSIDE DESTINATION (WITH WEBSITE LINK & DESCRIPTION) ---
         let hotelRowCount = 0;
         function addHotelRow() {
             hotelRowCount++;
@@ -465,7 +474,7 @@
                     <input type="url" placeholder="Official Website Link (e.g. https://sayemanresort.com)" class="hotel-url w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-emerald-400 focus:outline-none" required>
                 </div>
                 <div>
-                    <textarea placeholder="Short Description / Amenities (e.g. Sea view rooms, swimming pool, free breakfast...)" class="hotel-desc w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none resize-none h-14"></textarea>
+                    <textarea placeholder="Short Description / Amenities..." class="hotel-desc w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none resize-none h-12"></textarea>
                 </div>
                 <div>
                     <label class="block text-[10px] text-slate-400 mb-1">Hotel Cover Image:</label>
@@ -480,9 +489,8 @@
             if(row) row.remove();
         }
 
-        // --- 1. SLIDERS ---
         let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
-            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/slide1.mp4" }
+            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/bangladesh.mp4" }
         ];
 
         function renderSlidersTable() {
@@ -528,7 +536,6 @@
             }
         }
 
-        // --- 2. DESTINATIONS & SORTED HOTELS ---
         let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
 
         function renderDestinationsTable() {
@@ -556,6 +563,8 @@
             const name = document.getElementById('destName').value;
             const category = document.getElementById('destCategory').value;
             const district = document.getElementById('destDistrict').value;
+            const shortDesc = document.getElementById('destShortDesc').value;
+            const fullDesc = document.getElementById('destFullDesc').value;
             const fileInput = document.getElementById('destImageFile');
 
             let imageBase64 = "";
@@ -582,7 +591,6 @@
                 }
             }
 
-            // SORT HOTELS BY RATING (Highest 5 Star first)
             linkedHotels.sort((a, b) => b.rating - a.rating);
 
             destinations.push({ 
@@ -590,6 +598,8 @@
                 name, 
                 category, 
                 district, 
+                shortDesc,
+                fullDesc,
                 image: imageBase64,
                 hotels: linkedHotels 
             });
@@ -598,9 +608,11 @@
             renderDestinationsTable();
             closeModal('destModal');
             document.getElementById('destName').value = "";
+            document.getElementById('destShortDesc').value = "";
+            document.getElementById('destFullDesc').value = "";
             fileInput.value = "";
             document.getElementById('hotelRowsContainer').innerHTML = "";
-            alert("Destination & Hotels published successfully with website links!");
+            alert("Destination, descriptions & hotels published successfully!");
         }
 
         function deleteDestination(id) {
@@ -611,7 +623,6 @@
             }
         }
 
-        // --- 3. BOARD MEMBERS ---
         let boardMembers = JSON.parse(localStorage.getItem('btb_board_members')) || [];
         function renderBoardTable() {
             const tbody = document.getElementById('boardTableBody');
@@ -649,7 +660,6 @@
             renderBoardTable();
         }
 
-        // --- 4. NOTICES ---
         let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
         function renderNoticeTable() {
             const tbody = document.getElementById('noticeTableBody');
@@ -686,7 +696,6 @@
             renderNoticeTable();
         }
 
-        // --- 5. EVENTS ---
         let events = JSON.parse(localStorage.getItem('btb_events')) || [];
         function renderEventTable() {
             const tbody = document.getElementById('eventTableBody');
