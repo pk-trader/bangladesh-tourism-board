@@ -1,739 +1,335 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTB Admin Panel | Management</title>
+    <title>Bangladesh Tourism Board | Official Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' },
+                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22', bdGold: '#d97706' },
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
+<body class="bg-slate-900 text-slate-100 font-sans antialiased">
 
-    <!-- LOGIN OVERLAY -->
-    <div id="loginOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center">
-            <div class="w-16 h-16 bg-bdGreen text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg border border-emerald-400/30">
-                <i class="fa-solid fa-user-shield"></i>
+    <!-- Top Alert Bar -->
+    <div class="bg-bdDark border-b border-emerald-800/40 text-xs py-2 px-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-emerald-300">
+            <span class="flex items-center gap-2">
+                <span class="bg-bdRed text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase">Official Notice</span>
+                <span class="truncate">Welcome to Bangladesh Tourism Board Portal</span>
+            </span>
+            <div class="hidden md:flex gap-4 text-[11px]">
+                <span><i class="fa-solid fa-phone text-bdRed mr-1"></i> +880 2 8391580</span>
+                <span><i class="fa-solid fa-envelope text-emerald-400 mr-1"></i> info@tourismboard.gov.bd</span>
             </div>
-            <h2 class="text-2xl font-extrabold text-white">BTB CMS Portal</h2>
-            <p class="text-xs text-slate-400 mt-1 mb-6">Enter system passcode to access dashboard</p>
-
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <input type="password" id="passcodeInput" placeholder="Enter Admin Passcode" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-sm font-mono tracking-widest text-white focus:outline-none focus:border-emerald-500">
-                <p id="loginError" class="text-xs text-bdRed font-bold hidden">Invalid passcode! Try again.</p>
-                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">Unlock CMS Dashboard</button>
-            </form>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <div id="dashboardContent" class="hidden min-h-screen flex flex-col">
-        <!-- Top Admin Header -->
-        <header class="bg-slate-900 border-b border-emerald-900/50 sticky top-0 z-30">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-bdGreen flex items-center justify-center text-emerald-300 font-bold text-sm">BTB</span>
-                    <div>
-                        <h1 class="text-sm font-bold text-white">Bangladesh Tourism Board</h1>
-                        <p class="text-[10px] text-emerald-400 font-medium">Control Management System (CMS)</p>
-                    </div>
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-emerald-900/50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="#home" class="flex items-center gap-2">
+                <div class="w-9 h-9 rounded-full bg-bdGreen border-2 border-bdGold flex items-center justify-center text-bdGold">
+                    <i class="fa-solid fa-compass text-lg"></i>
                 </div>
-                <div class="flex items-center gap-3">
-                    <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700"><i class="fa-solid fa-globe mr-1"></i> View Live Site</a>
-                    <button onclick="handleLogout()" class="px-3 py-1.5 bg-red-950/60 text-bdRed hover:bg-red-900/50 text-xs font-bold rounded-lg transition border border-red-800/40"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
+                <div>
+                    <div class="text-base font-extrabold text-white">BEAUTIFUL BANGLADESH</div>
+                    <div class="text-[9px] text-emerald-400 uppercase font-medium">Bangladesh Tourism Board</div>
+                </div>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-xs font-semibold">
+                <a href="#home" class="hover:text-emerald-400 transition">Home</a>
+                <a href="#destinations" class="hover:text-emerald-400 transition">Destinations</a>
+                <a href="#top-places" class="hover:text-emerald-400 transition">Top Places</a>
+                <a href="#cultural-programs" class="hover:text-emerald-400 transition">Cultural Fairs</a>
+                <a href="#live-gps" class="text-bdRed hover:underline">Live GPS 📍</a>
+                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Board Members</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SLIDER SECTION -->
+    <section id="home" class="relative w-full h-screen overflow-hidden bg-slate-950 flex items-center justify-center">
+        <div id="videoContainer" class="absolute inset-0 w-full h-full z-0">
+            <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover brightness-90 transition-opacity duration-1000 opacity-100">
+                <source id="videoSource" src="videos/bangladesh.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/30 z-10"></div>
+        <div class="relative z-20 max-w-5xl mx-auto px-4 text-center">
+            <h1 id="heroTitle" class="text-4xl md:text-7xl font-extrabold tracking-tight text-white drop-shadow-2xl">
+                <span class="text-amber-400">BANGLA</span><span class="text-emerald-400">DESH</span>
+            </h1>
+            <p id="heroSub" class="mt-4 text-sm md:text-xl text-slate-200 font-medium max-w-2xl mx-auto drop-shadow-md">
+                Land of Greenery, Rivers & Endless Heritage
+            </p>
+        </div>
+        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-900/50 border border-slate-700 text-white flex items-center justify-center hover:bg-emerald-600 transition">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-900/50 border border-slate-700 text-white flex items-center justify-center hover:bg-emerald-600 transition">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div id="dotsContainer" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2"></div>
+    </section>
+
+    <!-- Notice Board Section -->
+    <section class="py-10 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="bg-slate-900 rounded-2xl p-5 border border-emerald-900/40 shadow-xl">
+                <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn text-bdRed"></i> Official Notices & Bulletins
+                </h3>
+                <div id="noticeListContainer" class="space-y-3">
+                    <p class="text-xs text-slate-400">Loading notices...</p>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- Main Dashboard Body -->
-        <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-10">
-            
-            <!-- SECTION 1: HERO SLIDERS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-film text-emerald-400"></i> Hero Video Sliders
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage home page hero videos using file paths (e.g. videos/slide1.mp4)</p>
-                    </div>
-                    <button onclick="openModal('sliderModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add New Hero Slide
-                    </button>
-                </div>
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-12 bg-slate-900 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <span class="text-emerald-400 font-bold text-xs uppercase tracking-widest">Explore Regions</span>
+                <h2 class="text-2xl font-extrabold text-white mt-1">Popular Destinations & Resorts</h2>
+            </div>
+            <div id="destinationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Title</th>
-                                <th class="py-3 px-2">Subtitle</th>
-                                <th class="py-3 px-2">Video Path</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="slidersTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 2: DESTINATIONS & HOTELS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Tourist Destinations & Nearby Hotels
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage destinations with descriptions, details and attached hotels</p>
-                    </div>
-                    <button onclick="openModal('destModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Destination
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Name</th>
-                                <th class="py-3 px-2">Category</th>
-                                <th class="py-3 px-2">District</th>
-                                <th class="py-3 px-2">Hotels Attached</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="destTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 3: BOARD MEMBERS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-user-tie text-emerald-400"></i> Board Members
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage management board members and executives</p>
-                    </div>
-                    <button onclick="openModal('boardModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Board Member
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Member Name</th>
-                                <th class="py-3 px-2">Designation / Role</th>
-                                <th class="py-3 px-2">Email / Contact</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="boardTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 4: NOTICE BOARD -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-bullhorn text-emerald-400"></i> Notice Board & News
-                        </h2>
-                        <p class="text-xs text-slate-400">Publish notices, climate advisories, and official circulars</p>
-                    </div>
-                    <button onclick="openModal('noticeModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Notice
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Notice Title</th>
-                                <th class="py-3 px-2">Category</th>
-                                <th class="py-3 px-2">Date</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="noticeTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 5: CULTURAL EVENTS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-days text-emerald-400"></i> Cultural Fairs & Festivals
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage upcoming heritage events and tourism fairs</p>
-                    </div>
-                    <button onclick="openModal('eventModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Event / Fair
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Event Title</th>
-                                <th class="py-3 px-2">Location</th>
-                                <th class="py-3 px-2">Event Date</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="eventTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- MODAL 1: HERO SLIDER -->
-    <div id="sliderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('sliderModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add New Hero Video Slide</h3>
-
-            <form onsubmit="saveSlider(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Slide Main Title:</label>
-                    <input type="text" id="sliderTitle" placeholder="e.g. BEAUTIFUL BANGLADESH" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Subtitle / Tagline:</label>
-                    <input type="text" id="sliderSub" placeholder="e.g. Land of Greenery, Rivers & Endless Heritage" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-emerald-400 mb-1">Video File Path or Direct URL:</label>
-                    <input type="text" id="sliderVideoUrl" placeholder="e.g. videos/cox's_bajar.mp4" required class="w-full bg-slate-950 border border-emerald-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Save & Publish Slide</button>
-            </form>
+    <!-- DESTINATION DETAILS & HOTELS MODAL -->
+    <div id="detailsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeDetailsModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div id="detailsModalContent"></div>
         </div>
     </div>
 
-    <!-- MODAL 2: DESTINATIONS WITH DESCRIPTION & HOTELS -->
-    <div id="destModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('destModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Destination, Descriptions & Hotels</h3>
-
-            <form onsubmit="saveDestination(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Destination Name:</label>
-                    <input type="text" id="destName" placeholder="e.g. Cox's Bazar" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Category:</label>
-                        <select id="destCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                            <option value="beaches">Beaches & Islands</option>
-                            <option value="hills">Hills & Mountains</option>
-                            <option value="heritage">Heritage & Culture</option>
-                            <option value="forests">Forests & Nature</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">District (64 Districts):</label>
-                        <select id="destDistrict" required class="districtSelect w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"></select>
-                    </div>
-                </div>
-
-                <!-- Short Description -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Short Description (Card view):</label>
-                    <input type="text" id="destShortDesc" placeholder="e.g. World's longest natural unbroken sandy sea beach." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-
-                <!-- Full Detailed Description -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Full Detailed Description (Popup view):</label>
-                    <textarea id="destFullDesc" placeholder="Write full history, beauty and travel guide..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 h-20 resize-none"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Destination Cover Image:</label>
-                    <input type="file" id="destImageFile" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
-                </div>
-
-                <!-- HOTELS & RESORTS SECTION -->
-                <div class="border-t border-slate-800 pt-4 mt-2">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-emerald-400"><i class="fa-solid fa-hotel mr-1"></i> Nearby Hotels & Resorts (With Website Link):</label>
-                        <button type="button" onclick="addHotelRow()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-emerald-300 px-2.5 py-1 rounded-lg border border-slate-700 font-bold transition">+ Add Hotel</button>
-                    </div>
-                    
-                    <div id="hotelRowsContainer" class="space-y-3"></div>
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-4">Publish Destination & Hotels</button>
-            </form>
+    <!-- BOARD MEMBERS MODAL -->
+    <div id="boardModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeBoardModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h2 class="text-xl font-extrabold text-white mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-user-tie text-emerald-400"></i> Board Members & Executives
+            </h2>
+            <div id="boardMembersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
-    <!-- MODAL 3: BOARD MEMBERS -->
-    <div id="boardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('boardModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Board Member</h3>
-
-            <form onsubmit="saveBoardMember(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Member Name:</label>
-                    <input type="text" id="boardName" placeholder="e.g. Mr. John Doe" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Designation / Role:</label>
-                    <input type="text" id="boardRole" placeholder="e.g. Chief Executive Officer (CEO)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Email / Contact info:</label>
-                    <input type="text" id="boardContact" placeholder="e.g. ceo@tourism.gov.bd" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Member Photo:</label>
-                    <input type="file" id="boardImageFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Board Member</button>
-            </form>
+    <!-- PDF DOCUMENT MODAL -->
+    <div id="pdfModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col p-4">
+        <div class="flex justify-between items-center bg-slate-900 px-6 py-4 border-b border-slate-800">
+            <h3 id="pdfModalTitle" class="text-sm font-bold text-white">Notice Document</h3>
+            <button onclick="closePdfModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
+        <iframe id="pdfFrame" class="w-full flex-1 border-0 bg-white"></iframe>
     </div>
 
-    <!-- MODAL 4: NOTICE BOARD -->
-    <div id="noticeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('noticeModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Official Notice</h3>
-
-            <form onsubmit="saveNotice(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice Title:</label>
-                    <input type="text" id="noticeTitle" placeholder="e.g. Travel Advisory for Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Category:</label>
-                    <select id="noticeCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="Press Release">Press Release</option>
-                        <option value="Climate">Climate</option>
-                        <option value="Travel Advisory">Travel Advisory</option>
-                        <option value="Circular">Official Circular</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice File / PDF / Image:</label>
-                    <input type="file" id="noticeFile" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Notice</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 5: CULTURAL EVENTS -->
-    <div id="eventModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('eventModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Cultural Event</h3>
-
-            <form onsubmit="saveEvent(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Event Name:</label>
-                    <input type="text" id="eventName" placeholder="e.g. Rash Mela Festival" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Location:</label>
-                    <input type="text" id="eventLocation" placeholder="e.g. Dublar Char, Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Date:</label>
-                    <input type="date" id="eventDate" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Banner Image:</label>
-                    <input type="file" id="eventImageFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Event</button>
-            </form>
-        </div>
-    </div>
-
+    <!-- JAVASCRIPT FOR DYNAMIC RENDERING -->
     <script>
-        const AUTH_PASS = "admin123";
-
-        const bdDistricts = [
-            "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogra", "Brahmanbaria", "Chandpur",
-            "Chittagong", "Chuadanga", "Comilla", "Cox's Bazar", "Dhaka", "Dinajpur", "Faridpur", "Feni",
-            "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jamalpur", "Jessore", "Jhalokati", "Jhenaidah",
-            "Joypurhat", "Khagrachhari", "Khulna", "Kishoreganj", "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat",
-            "Madaripur", "Magura", "Manikganj", "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon",
-            "Narail", "Narayanganj", "Narsingdi", "Natore", "Nawabganj", "Netrokona", "Nilphamari", "Noakhali",
-            "Pabna", "Panchagarh", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangamati", "Rangpur",
-            "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon"
+        let currentSlideIndex = 0;
+        let slideTimer = null;
+        const SLIDE_INTERVAL = 7000;
+        const defaultSliders = [
+            { title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/bangladesh.mp4" },
+            { title: "COX'S BAZAR", sub: "World's Longest Unbroken Natural Sandy Sea Beach", video: "videos/cox's_bajar.mp4" },
+            { title: "SAJEK VALLEY", sub: "Kingdom of Clouds in Hill Tracts", video: "videos/sajek.mp4" },
+            { title: "THE SUNDARBANS", sub: "Largest Mangrove Forest & Home of Royal Bengal Tiger", video: "videos/sundarbans.mp4" }
         ];
 
-        function populateDistrictDropdowns() {
-            const dropdowns = document.querySelectorAll('.districtSelect');
-            dropdowns.forEach(select => {
-                select.innerHTML = bdDistricts.map(d => `<option value="${d}">${d}</option>`).join('');
-            });
+        function getHeroSlides() {
+            const stored = localStorage.getItem('btb_sliders');
+            return (stored && JSON.parse(stored).length > 0) ? JSON.parse(stored) : defaultSliders;
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('passcodeInput').value;
-            if(pass === AUTH_PASS) {
-                sessionStorage.setItem('btb_auth', 'true');
-                checkAuth();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
+        function renderSlide(index) {
+            const slides = getHeroSlides();
+            currentSlideIndex = (index < 0) ? slides.length - 1 : (index >= slides.length ? 0 : index);
+            const slide = slides[currentSlideIndex];
+            const video = document.getElementById('heroVideo');
+            const videoSrc = document.getElementById('videoSource');
+            const titleEl = document.getElementById('heroTitle');
+            const subEl = document.getElementById('heroSub');
+
+            if (!video || !videoSrc) return;
+            video.classList.add('opacity-0');
+            setTimeout(() => {
+                videoSrc.src = slide.video;
+                video.load();
+                video.play().catch(e => console.log("Autoplay blocked:", e));
+                titleEl.innerHTML = slide.title.toUpperCase().includes("BANGLADESH") ? 
+                    `<span class="text-amber-400">BANGLA</span><span class="text-emerald-400">DESH</span>` : slide.title;
+                subEl.textContent = slide.sub;
+                video.classList.remove('opacity-0');
+            }, 300);
+            updateDots(slides.length);
+        }
+
+        function updateDots(total) {
+            const container = document.getElementById('dotsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('button');
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentSlideIndex ? 'bg-emerald-400 w-8' : 'bg-slate-500/60 hover:bg-slate-400'}`;
+                dot.onclick = () => { renderSlide(i); resetTimer(); };
+                container.appendChild(dot);
             }
         }
 
-        function checkAuth() {
-            if(sessionStorage.getItem('btb_auth') === 'true') {
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('dashboardContent').classList.remove('hidden');
-                populateDistrictDropdowns();
-                renderSlidersTable();
-                renderDestinationsTable();
-                renderBoardTable();
-                renderNoticeTable();
-                renderEventTable();
-            } else {
-                document.getElementById('loginOverlay').classList.remove('hidden');
-                document.getElementById('dashboardContent').classList.add('hidden');
+        function nextSlide() { renderSlide(currentSlideIndex + 1); resetTimer(); }
+        function prevSlide() { renderSlide(currentSlideIndex - 1); resetTimer(); }
+        function startTimer() { slideTimer = setInterval(() => renderSlide(currentSlideIndex + 1), SLIDE_INTERVAL); }
+        function resetTimer() { clearInterval(slideTimer); startTimer(); }
+
+        function renderNotices() {
+            const container = document.getElementById('noticeListContainer');
+            if (!container) return;
+            const notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
+            if (notices.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400">No active notices published yet.</p>`;
+                return;
             }
+            container.innerHTML = notices.map(n => `
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div>
+                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded uppercase">${n.category}</span>
+                        <h4 class="text-sm font-bold text-white mt-1">${n.title}</h4>
+                        <span class="text-[10px] text-slate-400">Published: ${n.date}</span>
+                    </div>
+                    ${n.file ? `<button onclick="openNoticeModal('${n.file}', '${n.title}')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg transition">View Document</button>` : ''}
+                </div>
+            `).join('');
         }
 
-        function handleLogout() {
-            sessionStorage.removeItem('btb_auth');
-            checkAuth();
-        }
-
-        function openModal(id) { 
-            document.getElementById(id).classList.remove('hidden'); 
-            if(id === 'destModal' && document.getElementById('hotelRowsContainer').children.length === 0) {
-                addHotelRow();
+        function renderDestinations() {
+            const grid = document.getElementById('destinationsGrid');
+            if (!grid) return;
+            const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+            if (destinations.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-6">No destinations added yet from admin panel.</p>`;
+                return;
             }
+            grid.innerHTML = destinations.map(d => `
+                <div onclick='openDestModal(${JSON.stringify(d)})' class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg cursor-pointer hover:border-emerald-500/50 transition group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${d.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${d.name}">
+                        <span class="absolute top-3 left-3 px-2.5 py-1 bg-emerald-950/80 backdrop-blur-md text-emerald-300 text-[10px] font-bold rounded-lg uppercase border border-emerald-800/40">${d.category}</span>
+                    </div>
+                    <div class="p-5 space-y-2">
+                        <div class="flex justify-between items-center text-xs text-slate-400">
+                            <span><i class="fa-solid fa-location-dot text-bdRed mr-1"></i> ${d.district}</span>
+                            <span class="text-yellow-400 font-bold font-mono">${d.hotels ? d.hotels.length : 0} Hotels</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">${d.name}</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">${d.shortDesc || ''}</p>
+                        <div class="pt-2 flex items-center justify-between text-xs font-bold text-emerald-400">
+                            <span>Explore Details & Hotels</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        function convertToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
+        function openDestModal(dest) {
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsModalContent');
+            if (!modal || !content) return;
 
-        let hotelRowCount = 0;
-        function addHotelRow() {
-            hotelRowCount++;
-            const container = document.getElementById('hotelRowsContainer');
-            const row = document.createElement('div');
-            row.id = `hotelRow_${hotelRowCount}`;
-            row.className = "p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-2 relative";
-            row.innerHTML = `
-                <button type="button" onclick="removeHotelRow(${hotelRowCount})" class="absolute top-2 right-2 text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" placeholder="Hotel / Resort Name" class="hotel-name w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none" required>
-                    <select class="hotel-rating w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
-                        <option value="5">⭐⭐⭐⭐⭐ (5 Star)</option>
-                        <option value="4">⭐⭐⭐⭐ (4 Star)</option>
-                        <option value="3">⭐⭐⭐ (3 Star)</option>
-                        <option value="2">⭐⭐ (2 Star)</option>
-                        <option value="1">⭐ (1 Star)</option>
-                    </select>
+            let hotelsHtml = (dest.hotels && dest.hotels.length > 0) ? dest.hotels.map(h => `
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center gap-3">
+                    <img src="${h.image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945'}" class="w-16 h-16 rounded-lg object-cover" alt="${h.name}">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="text-xs font-bold text-white">${h.name}</h4>
+                            <span class="text-yellow-400 text-[10px]">${'⭐'.repeat(h.rating)} (${h.rating} Star)</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 mt-0.5">${h.description || ''}</p>
+                        ${h.url ? `<a href="${h.url}" target="_blank" class="inline-block mt-1 text-[11px] text-emerald-400 font-bold hover:underline"><i class="fa-solid fa-globe mr-1"></i> Official Website</a>` : ''}
+                    </div>
                 </div>
-                <div>
-                    <input type="url" placeholder="Official Website Link (e.g. https://sayemanresort.com)" class="hotel-url w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-emerald-400 focus:outline-none" required>
-                </div>
-                <div>
-                    <textarea placeholder="Short Description / Amenities..." class="hotel-desc w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none resize-none h-12"></textarea>
-                </div>
-                <div>
-                    <label class="block text-[10px] text-slate-400 mb-1">Hotel Cover Image:</label>
-                    <input type="file" accept="image/*" class="hotel-img w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:bg-slate-800 file:text-emerald-300">
+            `).join('') : `<p class="text-xs text-slate-400">No hotels attached for this destination yet.</p>`;
+
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="h-64 rounded-2xl overflow-hidden relative">
+                        <img src="${dest.image || ''}" class="w-full h-full object-cover" alt="${dest.name}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                        <h2 class="absolute bottom-4 left-4 text-2xl font-extrabold text-white">${dest.name}</h2>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">${dest.district} Region</span>
+                        <p class="text-xs text-slate-200 mt-2 leading-relaxed whitespace-pre-line">${dest.fullDesc || dest.shortDesc || ''}</p>
+                    </div>
+                    <div class="border-t border-slate-800 pt-4">
+                        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-hotel text-emerald-400"></i> Recommended Hotels & Resorts (Top Rated)
+                        </h3>
+                        <div class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                            ${hotelsHtml}
+                        </div>
+                    </div>
                 </div>
             `;
-            container.appendChild(row);
+            modal.classList.remove('hidden');
         }
 
-        function removeHotelRow(id) {
-            const row = document.getElementById(`hotelRow_${id}`);
-            if(row) row.remove();
-        }
+        function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
-        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
-            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/bangladesh.mp4" }
-        ];
-
-        function renderSlidersTable() {
-            const tbody = document.getElementById('slidersTableBody');
-            if(!sliders || sliders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No sliders added yet</td></tr>`;
+        function renderBoardMembers() {
+            const grid = document.getElementById('boardMembersGrid');
+            if (!grid) return;
+            const members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
+            if (members.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-slate-400 col-span-2 text-center py-6">No board members added yet.</p>`;
                 return;
             }
-            tbody.innerHTML = sliders.map(s => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${s.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${s.title}</td>
-                    <td class="py-3 px-2 text-slate-300 max-w-xs truncate">${s.sub}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-mono text-[11px] max-w-xs truncate">${s.video}</td>
-                    <td class="py-3 px-2 text-right">
-                        <button onclick="deleteSlider(${s.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
-                    </td>
-                </tr>
+            grid.innerHTML = members.map(m => `
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-2xl flex items-center gap-4">
+                    <img src="${m.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}" class="w-16 h-16 rounded-xl object-cover" alt="${m.name}">
+                    <div class="space-y-1 flex-1">
+                        <h4 class="text-sm font-bold text-white">${m.name}</h4>
+                        <p class="text-xs text-emerald-400 font-semibold">${m.role}</p>
+                        ${m.bio ? `<p class="text-xs text-slate-300">${m.bio}</p>` : ''}
+                        <p class="text-[11px] text-slate-400"><i class="fa-solid fa-envelope mr-1"></i> ${m.contact || 'N/A'}</p>
+                    </div>
+                </div>
             `).join('');
         }
 
-        function saveSlider(e) {
-            e.preventDefault();
-            const title = document.getElementById('sliderTitle').value;
-            const sub = document.getElementById('sliderSub').value;
-            const videoUrlInput = document.getElementById('sliderVideoUrl').value.trim();
+        function openBoardModal() {
+            renderBoardMembers();
+            document.getElementById('boardModal').classList.remove('hidden');
+        }
+        function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
 
-            sliders.push({ id: Date.now(), title, sub, video: videoUrlInput });
-            localStorage.setItem('btb_sliders', JSON.stringify(sliders));
-            renderSlidersTable();
-            closeModal('sliderModal');
-            document.getElementById('sliderTitle').value = "";
-            document.getElementById('sliderSub').value = "";
-            document.getElementById('sliderVideoUrl').value = "";
-            alert("Hero Slide published successfully!");
+        function openNoticeModal(fileUrl, title) {
+            document.getElementById('pdfModalTitle').textContent = title;
+            document.getElementById('pdfFrame').src = fileUrl;
+            document.getElementById('pdfModal').classList.remove('hidden');
+        }
+        function closePdfModal() {
+            document.getElementById('pdfModal').classList.add('hidden');
+            document.getElementById('pdfFrame').src = "";
         }
 
-        function deleteSlider(id) {
-            if(confirm("Are you sure?")) {
-                sliders = sliders.filter(s => s.id !== id);
-                localStorage.setItem('btb_sliders', JSON.stringify(sliders));
-                renderSlidersTable();
-            }
-        }
-
-        let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-
-        function renderDestinationsTable() {
-            const tbody = document.getElementById('destTableBody');
-            if(!destinations || destinations.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500 font-bold">No destinations added yet</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = destinations.map(d => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${d.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${d.name}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold uppercase text-[10px]">${d.category}</td>
-                    <td class="py-3 px-2 text-slate-300">${d.district}</td>
-                    <td class="py-3 px-2 font-mono text-xs text-yellow-400 font-bold">${d.hotels ? d.hotels.length : 0} Hotels</td>
-                    <td class="py-3 px-2 text-right">
-                        <button onclick="deleteDestination(${d.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        async function saveDestination(e) {
-            e.preventDefault();
-            const name = document.getElementById('destName').value;
-            const category = document.getElementById('destCategory').value;
-            const district = document.getElementById('destDistrict').value;
-            const shortDesc = document.getElementById('destShortDesc').value;
-            const fullDesc = document.getElementById('destFullDesc').value;
-            const fileInput = document.getElementById('destImageFile');
-
-            let imageBase64 = "";
-            if (fileInput.files[0]) {
-                imageBase64 = await convertToBase64(fileInput.files[0]);
-            }
-
-            const hotelRows = document.querySelectorAll('#hotelRowsContainer > div');
-            let linkedHotels = [];
-
-            for (let row of hotelRows) {
-                const hName = row.querySelector('.hotel-name').value.trim();
-                const hRating = parseInt(row.querySelector('.hotel-rating').value);
-                const hUrl = row.querySelector('.hotel-url').value.trim();
-                const hDesc = row.querySelector('.hotel-desc').value.trim();
-                const hFileInput = row.querySelector('.hotel-img');
-
-                if(hName !== "") {
-                    let hImg = "";
-                    if(hFileInput.files[0]) {
-                        hImg = await convertToBase64(hFileInput.files[0]);
-                    }
-                    linkedHotels.push({ name: hName, rating: hRating, url: hUrl, description: hDesc, image: hImg });
-                }
-            }
-
-            linkedHotels.sort((a, b) => b.rating - a.rating);
-
-            destinations.push({ 
-                id: Date.now(), 
-                name, 
-                category, 
-                district, 
-                shortDesc,
-                fullDesc,
-                image: imageBase64,
-                hotels: linkedHotels 
-            });
-
-            localStorage.setItem('btb_destinations', JSON.stringify(destinations));
-            renderDestinationsTable();
-            closeModal('destModal');
-            document.getElementById('destName').value = "";
-            document.getElementById('destShortDesc').value = "";
-            document.getElementById('destFullDesc').value = "";
-            fileInput.value = "";
-            document.getElementById('hotelRowsContainer').innerHTML = "";
-            alert("Destination, descriptions & hotels published successfully!");
-        }
-
-        function deleteDestination(id) {
-            if(confirm("Are you sure?")) {
-                destinations = destinations.filter(d => d.id !== id);
-                localStorage.setItem('btb_destinations', JSON.stringify(destinations));
-                renderDestinationsTable();
-            }
-        }
-
-        let boardMembers = JSON.parse(localStorage.getItem('btb_board_members')) || [];
-        function renderBoardTable() {
-            const tbody = document.getElementById('boardTableBody');
-            if(!boardMembers || boardMembers.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No members added yet</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = boardMembers.map(b => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${b.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${b.name}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold text-[11px]">${b.role}</td>
-                    <td class="py-3 px-2 text-slate-300">${b.contact}</td>
-                    <td class="py-3 px-2 text-right"><button onclick="deleteBoardMember(${b.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-        async function saveBoardMember(e) {
-            e.preventDefault();
-            const name = document.getElementById('boardName').value;
-            const role = document.getElementById('boardRole').value;
-            const contact = document.getElementById('boardContact').value;
-            const fileInput = document.getElementById('boardImageFile');
-            let imgBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            boardMembers.push({ id: Date.now(), name, role, contact, image: imgBase64 });
-            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-            renderBoardTable();
-            closeModal('boardModal');
-            alert("Board member published!");
-        }
-        function deleteBoardMember(id) {
-            boardMembers = boardMembers.filter(b => b.id !== id);
-            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-            renderBoardTable();
-        }
-
-        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
-        function renderNoticeTable() {
-            const tbody = document.getElementById('noticeTableBody');
-            if(!notices || notices.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No notices yet</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = notices.map(n => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${n.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${n.title}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold text-[10px]">${n.category}</td>
-                    <td class="py-3 px-2 text-slate-300">${n.date}</td>
-                    <td class="py-3 px-2 text-right"><button onclick="deleteNotice(${n.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-        async function saveNotice(e) {
-            e.preventDefault();
-            const title = document.getElementById('noticeTitle').value;
-            const category = document.getElementById('noticeCategory').value;
-            const fileInput = document.getElementById('noticeFile');
-            let fileBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            notices.push({ id: Date.now(), title, category, date: new Date().toLocaleDateString(), file: fileBase64 });
-            localStorage.setItem('btb_notices', JSON.stringify(notices));
-            renderNoticeTable();
-            closeModal('noticeModal');
-            alert("Notice published!");
-        }
-        function deleteNotice(id) {
-            notices = notices.filter(n => n.id !== id);
-            localStorage.setItem('btb_notices', JSON.stringify(notices));
-            renderNoticeTable();
-        }
-
-        let events = JSON.parse(localStorage.getItem('btb_events')) || [];
-        function renderEventTable() {
-            const tbody = document.getElementById('eventTableBody');
-            if(!events || events.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-bold">No events yet</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = events.map(e => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${e.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${e.name}</td>
-                    <td class="py-3 px-2 text-slate-300">${e.location}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-mono text-[11px]">${e.date}</td>
-                    <td class="py-3 px-2 text-right"><button onclick="deleteEvent(${e.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-        async function saveEvent(e) {
-            e.preventDefault();
-            const name = document.getElementById('eventName').value;
-            const location = document.getElementById('eventLocation').value;
-            const date = document.getElementById('eventDate').value;
-            const fileInput = document.getElementById('eventImageFile');
-            let imgBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            events.push({ id: Date.now(), name, location, date, image: imgBase64 });
-            localStorage.setItem('btb_events', JSON.stringify(events));
-            renderEventTable();
-            closeModal('eventModal');
-            alert("Event published!");
-        }
-        function deleteEvent(id) {
-            events = events.filter(ev => ev.id !== id);
-            localStorage.setItem('btb_events', JSON.stringify(events));
-            renderEventTable();
-        }
-
-        window.addEventListener('DOMContentLoaded', checkAuth);
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSlide(0);
+            startTimer();
+            renderNotices();
+            renderDestinations();
+        });
     </script>
 </body>
 </html>
