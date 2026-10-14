@@ -71,12 +71,38 @@
         </div>
     </nav>
 
-    <!-- Hero Interactive Slider (Hills, Sea Video + Interactive Map) -->
-    <section id="home" class="relative h-[65vh] bg-black overflow-hidden">
-        <div id="carouselWrapper" class="relative h-full w-full"></div>
-        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-slate-900/80 text-white p-3 rounded-full hover:bg-emerald-600 transition"><i class="fa-solid fa-chevron-left"></i></button>
-        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-slate-900/80 text-white p-3 rounded-full hover:bg-emerald-600 transition"><i class="fa-solid fa-chevron-right"></i></button>
-        <div id="carouselDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2"></div>
+    <!-- Hero Interactive Slider -->
+    <section id="home" class="relative w-full h-screen overflow-hidden bg-slate-950 flex items-center justify-center">
+        <!-- Video Background Container -->
+        <div id="videoContainer" class="absolute inset-0 w-full h-full z-0">
+            <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover brightness-90 transition-opacity duration-1000 opacity-100">
+                <source id="videoSource" src="videos/bangladesh.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Light Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/30 z-10"></div>
+
+        <!-- Slide Text Content -->
+        <div class="relative z-20 max-w-5xl mx-auto px-4 text-center">
+            <h1 id="heroTitle" class="text-4xl md:text-7xl font-extrabold tracking-tight text-white drop-shadow-2xl transition-all duration-700 transform translate-y-0">
+                <span class="text-amber-400">BANGLA</span><span class="text-emerald-400">DESH</span>
+            </h1>
+            <p id="heroSub" class="mt-4 text-sm md:text-xl text-slate-200 font-medium max-w-2xl mx-auto drop-shadow-md transition-all duration-700 delay-100">
+                Land of Greenery, Rivers & Endless Heritage
+            </p>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-900/50 border border-slate-700/60 text-white flex items-center justify-center hover:bg-emerald-600 transition">
+            <i class="fa-solid fa-chevron-left text-sm md:text-base"></i>
+        </button>
+        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-900/50 border border-slate-700/60 text-white flex items-center justify-center hover:bg-emerald-600 transition">
+            <i class="fa-solid fa-chevron-right text-sm md:text-base"></i>
+        </button>
+
+        <!-- Slide Dots Indicator -->
+        <div id="dotsContainer" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2"></div>
     </section>
 
     <!-- Official Notice Board -->
@@ -175,194 +201,103 @@
             icon.className = menu.classList.contains('hidden') ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
         }
 
-        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
-            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4" }
-        ];
+        let currentSlideIndex = 0;
+    let slideTimer = null;
+    const SLIDE_INTERVAL = 7000; // ৭ সেকেন্ড পর পর স্লাইড চেঞ্জ হবে
 
-        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [
-            { id: 1, title: "Winter Tourism Advisory 2026", date: "Oct 12, 2026", pdfUrl: "", desc: "Special security guidelines for tourists visiting coastal regions." }
-        ];
+    const defaultSliders = [
+        { title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/bangladesh.mp4" },
+        { title: "COX'S BAZAR", sub: "World's Longest Unbroken Natural Sandy Sea Beach", video: "videos/cox's_bajar.mp4" },
+        { title: "SAJEK VALLEY", sub: "Kingdom of Clouds in Hill Tracts", video: "videos/sajek.mp4" },
+        { title: "THE SUNDARBANS", sub: "Largest Mangrove Forest & Home of Royal Bengal Tiger", video: "videos/sundarbans.mp4" }
+    ];
 
-        let destinations = JSON.parse(localStorage.getItem('btb_dests')) || [
-            { id: 1, name: "Cox's Bazar", location: "Cox's Bazar, Chittagong", category: "beach", isTop: true, img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80", img2: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=600&q=80", video: "https://assets.mixkit.co/videos/preview/mixkit-sea-waves-approaching-the-beach-1188-large.mp4", shortDesc: "120 km unbroken sea beach.", fullDesc: "Cox's Bazar is famous for its long natural sandy beach.", hotels: [{ name: "Sayeman Beach Resort", link: "https://sayemanresort.com" }] }
-        ];
-
-        let culturals = JSON.parse(localStorage.getItem('btb_culturals')) || [
-            { id: 1, title: "National Tourism Folk Fair", date: "Nov 20, 2026", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80", desc: "Annual cultural festival featuring rural handicrafts, music and food." }
-        ];
-
-        let boardMembers = JSON.parse(localStorage.getItem('btb_boards')) || [
-            { id: 1, name: "Md. Mokammel Hossain", role: "Chairman & Secretary", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" }
-        ];
-
-        let currentSlide = 0;
-
-        function renderSliders() {
-            const wrapper = document.getElementById('carouselWrapper');
-            if(!sliders || sliders.length === 0) {
-                wrapper.innerHTML = `<div class="h-full flex items-center justify-center text-slate-500 font-bold">No Sliders Added Yet</div>`;
-                return;
-            }
-            wrapper.innerHTML = sliders.map((s, idx) => `
-                <div class="slide-item absolute inset-0 transition-opacity duration-700 ${idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-                    <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-50"><source src="${s.video}" type="video/mp4"></video>
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-                    
-                    <!-- Interactive Map SVG Layer (Moves with Mouse) -->
-                    <div class="interactive-map-layer absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-                        <svg class="w-96 h-96 text-emerald-400 fill-current transform transition-transform duration-200" viewBox="0 0 100 100">
-                            <path d="M30 20 L50 10 L70 25 L80 50 L65 85 L40 90 L20 65 Z" />
-                        </svg>
-                    </div>
-
-                    <div class="relative max-w-7xl mx-auto h-full flex flex-col justify-center items-center text-center px-4">
-                        <h1 class="text-4xl sm:text-7xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-white to-emerald-400 drop-shadow-2xl">${s.title}</h1>
-                        <p class="text-sm sm:text-base text-slate-200 mt-3 max-w-xl font-medium">${s.sub}</p>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('carouselDots').innerHTML = sliders.map((_, idx) => `
-                <button onclick="setSlide(${idx})" class="w-3 h-3 rounded-full ${idx === currentSlide ? 'bg-emerald-400' : 'bg-slate-700'}"></button>
-            `).join('');
+    function getHeroSlides() {
+        const stored = localStorage.getItem('btb_sliders');
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.length > 0) return parsed;
         }
+        return defaultSliders;
+    }
 
-        // Mouse Parallax Effect for Map Movement
-        document.addEventListener('mousemove', (e) => {
-            const mapLayers = document.querySelectorAll('.interactive-map-layer svg');
-            const x = (window.innerWidth / 2 - e.clientX) / 25;
-            const y = (window.innerHeight / 2 - e.clientY) / 25;
-            mapLayers.forEach(layer => {
-                layer.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
-            });
-        });
+    function renderSlide(index) {
+        const slides = getHeroSlides();
+        if (index < 0) currentSlideIndex = slides.length - 1;
+        else if (index >= slides.length) currentSlideIndex = 0;
+        else currentSlideIndex = index;
 
-        function nextSlide() { if(sliders.length > 0) { currentSlide = (currentSlide + 1) % sliders.length; renderSliders(); } }
-        function prevSlide() { if(sliders.length > 0) { currentSlide = (currentSlide - 1 + sliders.length) % sliders.length; renderSliders(); } }
-        function setSlide(i) { currentSlide = i; renderSliders(); }
+        const slide = slides[currentSlideIndex];
 
-        function renderNotices() {
-            document.getElementById('noticeListContainer').innerHTML = notices.map(n => `
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center gap-2">
-                    <div>
-                        <span class="text-[9px] bg-red-950 text-bdRed px-2 py-0.5 rounded font-bold">${n.date}</span>
-                        <h4 class="text-xs sm:text-sm font-bold text-white hover:text-emerald-400 cursor-pointer" onclick="openPdf('${n.pdfUrl}', '${n.title}')">${n.title}</h4>
-                        <p class="text-[11px] text-slate-400">${n.desc}</p>
-                    </div>
-                    <button onclick="openPdf('${n.pdfUrl}', '${n.title}')" class="px-3 py-1 bg-emerald-900/40 text-emerald-300 border border-emerald-600/30 rounded-lg text-xs font-semibold whitespace-nowrap"><i class="fa-solid fa-file-pdf text-bdRed mr-1"></i> View Notice</button>
-                </div>
-            `).join('');
-        }
+        const video = document.getElementById('heroVideo');
+        const videoSrc = document.getElementById('videoSource');
+        const titleEl = document.getElementById('heroTitle');
+        const subEl = document.getElementById('heroSub');
 
-        function filterDestinations(cat) {
-            const filterContainer = document.getElementById('categoryFilters');
-            if (filterContainer) {
-                filterContainer.innerHTML = `
-                    <button onclick="filterDestinations('all')" class="px-4 py-2 ${cat === 'all' ? 'bg-emerald-700 text-white shadow-lg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'} text-xs font-bold rounded-xl transition duration-300">All Places</button>
-                    <button onclick="filterDestinations('beach')" class="px-4 py-2 ${cat === 'beach' ? 'bg-emerald-700 text-white shadow-lg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'} text-xs font-bold rounded-xl transition duration-300">🏖️ Sea Beaches</button>
-                    <button onclick="filterDestinations('hills')" class="px-4 py-2 ${cat === 'hills' ? 'bg-emerald-700 text-white shadow-lg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'} text-xs font-bold rounded-xl transition duration-300">⛰️ Hill Tracks</button>
-                    <button onclick="filterDestinations('forest')" class="px-4 py-2 ${cat === 'forest' ? 'bg-emerald-700 text-white shadow-lg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'} text-xs font-bold rounded-xl transition duration-300">🐅 Forest & Wildlife</button>
-                `;
+        if (!video || !videoSrc || !titleEl || !subEl) return;
+
+        video.classList.add('opacity-0');
+        
+        setTimeout(() => {
+            if (slide.video) {
+                videoSrc.src = slide.video;
+                video.load();
+                video.play().catch(e => console.log("Autoplay blocked:", e));
             }
 
-            const list = cat === 'all' ? destinations : destinations.filter(d => d.category === cat);
-            document.getElementById('destinationsGrid').innerHTML = list.map(d => `
-                <div onclick="openDetailsModal(${d.id})" class="bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 hover:border-emerald-600 cursor-pointer transition group">
-                    <img src="${d.img}" class="w-full h-40 object-cover group-hover:scale-105 transition duration-500">
-                    <div class="p-4">
-                        <span class="text-[10px] bg-slate-900 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase">${d.category}</span>
-                        <h3 class="text-base font-bold text-white mt-1">${d.name}</h3>
-                        <p class="text-slate-400 text-xs line-clamp-2 mt-1">${d.shortDesc || d.desc || ''}</p>
-                        <p class="text-xs font-bold text-emerald-400 mt-3"><i class="fa-solid fa-map-pin mr-1"></i> ${d.location}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderTopPlaces() {
-            const tops = destinations.filter(d => d.isTop);
-            document.getElementById('topPlacesGrid').innerHTML = tops.map(d => `
-                <div onclick="openDetailsModal(${d.id})" class="bg-slate-900 p-3 rounded-2xl border border-amber-500/30 cursor-pointer hover:border-amber-400 transition">
-                    <img src="${d.img}" class="w-full h-32 object-cover rounded-xl mb-2">
-                    <h4 class="font-bold text-white text-sm">${d.name}</h4>
-                    <p class="text-[11px] text-amber-400 font-semibold"><i class="fa-solid fa-star mr-1"></i> Top Ranked Spot</p>
-                </div>
-            `).join('');
-        }
-
-        function renderCulturals() {
-            document.getElementById('culturalGrid').innerHTML = culturals.map(c => `
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                    <img src="${c.img}" class="w-full h-40 object-cover rounded-xl mb-3">
-                    <span class="text-[10px] bg-red-950 text-bdRed px-2 py-0.5 rounded font-bold">${c.date}</span>
-                    <h3 class="text-base font-bold text-white mt-1">${c.title}</h3>
-                    <p class="text-slate-400 text-xs mt-1">${c.desc}</p>
-                </div>
-            `).join('');
-        }
-
-        function openDetailsModal(id) {
-            const d = destinations.find(x => x.id === id);
-            if (!d) return;
-            document.getElementById('detailsModalContent').innerHTML = `
-                <h2 class="text-2xl font-extrabold text-white mb-1">${d.name}</h2>
-                <p class="text-xs text-emerald-400 font-bold mb-4"><i class="fa-solid fa-map-pin mr-1"></i> ${d.location}</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                    <img src="${d.img}" class="w-full h-44 object-cover rounded-xl border border-slate-700">
-                    <img src="${d.img2 || d.img}" class="w-full h-44 object-cover rounded-xl border border-slate-700">
-                </div>
-                ${d.video ? `<video autoplay loop muted playsinline class="w-full h-48 object-cover rounded-xl border border-slate-700 mb-4"><source src="${d.video}" type="video/mp4"></video>` : ''}
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4">
-                    <h4 class="text-xs font-bold text-slate-300 uppercase mb-1">About Spot</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">${d.fullDesc || d.shortDesc || d.desc || 'No detailed description available.'}</p>
-                </div>
-                <div class="bg-slate-950 p-4 rounded-xl border border-emerald-800/50">
-                    <h4 class="text-xs font-bold text-amber-400 uppercase mb-2 flex items-center gap-1.5"><i class="fa-solid fa-hotel"></i> Reference Hotels & Resorts</h4>
-                    <div class="space-y-2">
-                        ${d.hotels && d.hotels.length ? d.hotels.map(h => `
-                            <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                                <span class="text-xs font-bold text-white">${h.name}</span>
-                                <a href="${h.link}" target="_blank" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-[11px] font-bold">Book Now <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i></a>
-                            </div>
-                        `).join('') : '<p class="text-xs text-slate-500">No hotel links added yet.</p>'}
-                    </div>
-                </div>
-            `;
-            document.getElementById('detailsModal').classList.remove('hidden');
-        }
-
-        function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
-        function openBoardModal() {
-            document.getElementById('boardMembersGrid').innerHTML = boardMembers.map(b => `
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-center">
-                    <img src="${b.img}" class="w-20 h-20 rounded-full mx-auto object-cover border-2 border-emerald-500 mb-2">
-                    <h3 class="font-bold text-white text-sm">${b.name}</h3>
-                    <p class="text-xs text-emerald-400 font-medium">${b.role}</p>
-                </div>
-            `).join('');
-            document.getElementById('boardModal').classList.remove('hidden');
-        }
-        function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
-        function openPdf(url, title) {
-            document.getElementById('pdfModalTitle').innerText = title;
-            document.getElementById('pdfFrame').src = `https://docs.google.com/viewer?url=${encodeURIComponent(url || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')}&embedded=true`;
-            document.getElementById('pdfModal').classList.remove('hidden');
-        }
-        function closePdfModal() { document.getElementById('pdfModal').classList.add('hidden'); document.getElementById('pdfFrame').src = ''; }
-        function getLiveLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(p => {
-                    const lat = p.coords.latitude.toFixed(4), lng = p.coords.longitude.toFixed(4);
-                    document.getElementById('gpsLat').innerText = lat; document.getElementById('gpsLng').innerText = lng;
-                    document.getElementById('mapIframe').src = `https://maps.google.com/maps?q=${lat},${lng}&z=14&output=embed`;
-                });
+            if (slide.title.toUpperCase().includes("BANGLADESH")) {
+                titleEl.innerHTML = `<span class="text-amber-400">BANGLA</span><span class="text-emerald-400">DESH</span>`;
+            } else {
+                titleEl.textContent = slide.title;
             }
-        }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderSliders(); renderNotices(); filterDestinations('all'); renderTopPlaces(); renderCulturals();
-            setInterval(nextSlide, 5000);
-        });
-    </script>
+            subEl.textContent = slide.sub;
+            video.classList.remove('opacity-0');
+        }, 300);
+
+        updateDots(slides.length);
+    }
+
+    function updateDots(total) {
+        const container = document.getElementById('dotsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('button');
+            dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentSlideIndex ? 'bg-emerald-400 w-8' : 'bg-slate-500/60 hover:bg-slate-400'}`;
+            dot.onclick = () => {
+                renderSlide(i);
+                resetTimer();
+            };
+            container.appendChild(dot);
+        }
+    }
+
+    function nextSlide() {
+        renderSlide(currentSlideIndex + 1);
+        resetTimer();
+    }
+
+    function prevSlide() {
+        renderSlide(currentSlideIndex - 1);
+        resetTimer();
+    }
+
+    function startTimer() {
+        slideTimer = setInterval(() => {
+            renderSlide(currentSlideIndex + 1);
+        }, SLIDE_INTERVAL);
+    }
+
+    function resetTimer() {
+        clearInterval(slideTimer);
+        startTimer();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        renderSlide(0);
+        startTimer();
+    });
+</script>
 </body>
 </html>
