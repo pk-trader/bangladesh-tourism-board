@@ -577,7 +577,7 @@
         // localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
         // renderBoardTable();
 
-        // Render Notice Table Live from Firebase Firestore
+       // Render Notice Table Live from Firebase Firestore
         function renderNoticeTable() {
             const tbody = document.getElementById('noticeTableBody');
             if (!tbody) return;
@@ -638,7 +638,7 @@
             }
         }
 
-       window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             if (typeof checkAuth === 'function') checkAuth();
             renderNoticeTable();
         });
