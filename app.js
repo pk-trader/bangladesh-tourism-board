@@ -1,7 +1,8 @@
-// Live Google Maps Driving Navigation Function
+// Updated Live Google Maps Driving Navigation Function with Auto Current Location
 function openGoogleMapsNav(destinationName, district) {
-    const query = encodeURIComponent(`${destinationName}, ${district}, Bangladesh`);
-    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}&travelmode=driving`;
+    const destination = encodeURIComponent(`${destinationName}, ${district}, Bangladesh`);
+    // 'origin=current+location' forces Google Maps to automatically detect user's current GPS location
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${destination}&travelmode=driving`;
     window.open(mapsUrl, '_blank');
 }
 
