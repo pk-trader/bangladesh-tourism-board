@@ -572,50 +572,99 @@
         }
 
         function deleteBoardMember(id) {
-            boardMembers = boardMembers.filter(b => b.id !== id);
-            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-            renderBoardTable();
-        }
+        // Board members delete logic (Jodi thake)
+        // boardMembers = boardMembers.filter(b => b.id !== id);
+        // localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
+        // renderBoardTable();
 
-        let notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
+        // Render Notice Table Live from Firebase Firestore
         function renderNoticeTable() {
             const tbody = document.getElementById('noticeTableBody');
-            tbody.innerHTML = notices.map(n => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${n.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${n.title}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold text-[10px]">${n.category}</td>
-                    <td class="py-3 px-2 text-slate-300">${n.date}</td>
-                    <td class="py-3 px-2 text-right"><button onclick="deleteNotice(${n.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                </tr>
-            `).join('');
+            if (!tbody) return;
+
+            db.collection('notices').onSnapshot((snapshot) => {
+                tbody.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const n = doc.data();
+                    const docId = doc.id;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="py-3 px-2 font-mono text-slate-400">#${docId.slice(0, 5)}</td>
+                            <td class="py-3 px-2 font-bold text-white">${n.title}</td>
+                            <td class="py-3 px-2 text-emerald-400 font-semibold text-[10px]">${n.category}</td>
+                            <td class="py-3 px-2 text-slate-300">${n.date}</td>
+                            <td class="py-3 px-2 text-right"><button onclick="deleteNotice('${docId}')" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
+        // Save Notice to Firebase Firestore
         async function saveNotice(e) {
             e.preventDefault();
             const fileInput = document.getElementById('noticeFile');
             let fileBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
 
-            notices.push({ 
-                id: Date.now(), 
-                title: document.getElementById('noticeTitle').value, 
-                category: document.getElementById('noticeCategory').value, 
-                date: new Date().toLocaleDateString(), 
-                file: fileBase64 
-            });
-            localStorage.setItem('btb_notices', JSON.stringify(notices));
-            renderNoticeTable();
-            closeModal('noticeModal');
-            alert("Notice published!");
+            const noticeData = {
+                title: document.getElementById('noticeTitle').value,
+                category: document.getElementById('noticeCategory').value,
+                date: new Date().toLocaleDateString(),
+                file: fileBase64,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('notices').add(noticeData);
+                document.getElementById('noticeForm').reset();
+                closeModal('noticeModal');
+                alert("Notice published successfully to Firebase!");
+            } catch (err) {
+                console.error("Error adding notice: ", err);
+                alert("Failed to publish notice.");
+            }
         }
 
-        function deleteNotice(id) {
-            notices = notices.filter(n => n.id !== id);
-            localStorage.setItem('btb_notices', JSON.stringify(notices));
-            renderNoticeTable();
+        // Delete Notice from Firebase Firestore
+        async function deleteNotice(id) {
+            if (confirm("Are you sure you want to delete this notice?")) {
+                try {
+                    await db.collection('notices').doc(id).delete();
+                    alert("Notice deleted successfully!");
+                } catch (err) {
+                    console.error("Error deleting notice: ", err);
+                    alert("Failed to delete notice.");
+                }
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', checkAuth);
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof checkAuth === 'function') checkAuth();
+            renderNoticeTable();
+        });
     </script>
+    
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+      // Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBwiOJy8euK1gVYvu-zhO_UBEctgux9pBw",
+        authDomain: "bangladesh-tourism-board.firebaseapp.com",
+        projectId: "bangladesh-tourism-board",
+        storageBucket: "bangladesh-tourism-board.firebasestorage.app",
+        messagingSenderId: "901892635160",
+        appId: "1:901892635160:web:2dbdaa822ffec58824e16d",
+        measurementId: "G-LZZR9NF6RG"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+
+    <script src="app.js"></script>
 </body>
 </html>
