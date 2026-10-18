@@ -17,6 +17,29 @@
             }
         }
     </script>
+    <style>
+        /* Styling Google Translate Widget for Dark Theme */
+        .goog-te-gadget-simple {
+            background-color: #0f172a !important;
+            border: 1px solid #065f46 !important;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+            font-size: 11px !important;
+        }
+        .goog-te-gadget-simple span, .goog-te-menu-value span {
+            color: #34d399 !important;
+            font-weight: 600 !important;
+        }
+        .goog-te-gadget-icon {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+        }
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased">
 
@@ -36,8 +59,8 @@
 
     <!-- Navigation Bar -->
     <nav class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-emerald-900/50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="#home" class="flex items-center gap-2">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
+            <a href="#home" class="flex items-center gap-2 shrink-0">
                 <div class="w-9 h-9 rounded-full bg-bdGreen border-2 border-bdGold flex items-center justify-center text-bdGold">
                     <i class="fa-solid fa-compass text-lg"></i>
                 </div>
@@ -46,7 +69,7 @@
                     <div class="text-[9px] text-emerald-400 uppercase font-medium">Bangladesh Tourism Board</div>
                 </div>
             </a>
-            <div class="hidden md:flex items-center gap-6 text-xs font-semibold">
+            <div class="hidden lg:flex items-center gap-5 text-xs font-semibold">
                 <a href="#home" class="hover:text-emerald-400 transition">Home</a>
                 <a href="#destinations" class="hover:text-emerald-400 transition">Destinations</a>
                 <a href="https://www.visa.gov.bd/" target="_blank" class="text-slate-300 hover:text-emerald-400 font-medium transition">Visa & Travel</a>
@@ -54,21 +77,27 @@
                 <a href="#live-gps" class="text-bdRed hover:underline">Live GPS 📍</a>
                 <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Board Members</button>
             </div>
-            <button onclick="toggleMobileMenu()" class="md:hidden text-white text-xl p-2 focus:outline-none">
-                <i class="fa-solid fa-bars" id="menuIcon"></i>
-            </button>
+
+            <!-- Language Selector Widget -->
+            <div class="flex items-center gap-2">
+                <div id="google_translate_element"></div>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-xl p-2 focus:outline-none">
+                    <i class="fa-solid fa-bars" id="menuIcon"></i>
+                </button>
+            </div>
         </div>
-        <div id="mobileMenu" class="hidden md:hidden bg-slate-950 border-b border-emerald-900/50 px-4 py-3 space-y-2 text-xs font-semibold">
+
+        <div id="mobileMenu" class="hidden lg:hidden bg-slate-950 border-b border-emerald-900/50 px-4 py-3 space-y-2 text-xs font-semibold">
             <a href="#home" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Home</a>
             <a href="#destinations" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Destinations</a>
-            <a href="https://www.visa.gov.bd/" target="_blank" class="text-lg font-bold text-white hover:text-emerald-400 transition block py-2">Visa & Travel</a>
+            <a href="https://www.visa.gov.bd/" target="_blank" class="text-slate-300 hover:text-emerald-400 font-medium transition block py-1.5">Visa & Travel</a>
             <a href="#cultural-programs" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Cultural Fairs</a>
             <a href="#live-gps" onclick="toggleMobileMenu()" class="block py-1.5 text-bdRed">Live GPS 📍</a>
             <button onclick="openBoardModal(); toggleMobileMenu();" class="w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg">Board Members</button>
         </div>
     </nav>
 
-    <!-- HERO SLIDER SECTION (Reduced height) -->
+    <!-- HERO SLIDER SECTION -->
     <section id="home" class="relative w-full h-[65vh] overflow-hidden bg-slate-950 flex items-center justify-center">
         <div id="videoContainer" class="absolute inset-0 w-full h-full z-0">
             <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover brightness-90 transition-opacity duration-1000 opacity-100">
@@ -136,10 +165,9 @@
         </div>
     </section>
 
-    <!-- DESTINATION DETAILS & HOTELS MODAL (With Left Back & Right GPS Nav) -->
+    <!-- DESTINATION DETAILS & HOTELS MODAL -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <!-- Header buttons: Left Back, Right GPS -->
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
                 <button onclick="closeDetailsModal()" class="px-3.5 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-red-700 transition shadow">
                     <i class="fa-solid fa-arrow-left"></i> Back
@@ -191,6 +219,19 @@
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,bn,ar,hi,es,fr,de,ja,zh-CN',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- JAVASCRIPT LOGIC -->
     <script src="app.js"></script>
