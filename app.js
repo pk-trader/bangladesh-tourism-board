@@ -1,7 +1,6 @@
 // Updated Live Google Maps Driving Navigation Function with Auto Current Location
 function openGoogleMapsNav(destinationName, district) {
     const destination = encodeURIComponent(`${destinationName}, ${district}, Bangladesh`);
-    // 'origin=current+location' forces Google Maps to automatically detect user's current GPS location
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${destination}&travelmode=driving`;
     window.open(mapsUrl, '_blank');
 }
@@ -70,24 +69,42 @@ function prevSlide() { renderSlide(currentSlideIndex - 1); resetTimer(); }
 function startTimer() { slideTimer = setInterval(() => renderSlide(currentSlideIndex + 1), SLIDE_INTERVAL); }
 function resetTimer() { clearInterval(slideTimer); startTimer(); }
 
+// Render Notices Live from Firebase Firestore
 function renderNotices() {
     const container = document.getElementById('noticeListContainer');
     if (!container) return;
-    const notices = JSON.parse(localStorage.getItem('btb_notices')) || [];
-    if (notices.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400">No active notices published yet.</p>`;
+
+    if (typeof db === 'undefined') {
+        container.innerHTML = `<p class="text-xs text-slate-400">Firebase database not initialized.</p>`;
         return;
     }
-    container.innerHTML = notices.map(n => `
-        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-            <div>
-                <span class="px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded uppercase">${n.category}</span>
-                <h4 class="text-sm font-bold text-white mt-1">${n.title}</h4>
-                <span class="text-[10px] text-slate-400">Published: ${n.date}</span>
-            </div>
-            ${n.file ? `<button onclick="openNoticeModal('${n.file}', '${n.title}')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg transition">View Document</button>` : ''}
-        </div>
-    `).join('');
+
+    db.collection('notices').onSnapshot((snapshot) => {
+        if (snapshot.empty) {
+            container.innerHTML = `<p class="text-xs text-slate-400">No active notices published yet.</p>`;
+            return;
+        }
+
+        let noticesHtml = '';
+        snapshot.forEach((doc) => {
+            const n = doc.data();
+            const docId = doc.id;
+            noticesHtml += `
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div>
+                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded uppercase">${n.category || 'General'}</span>
+                        <h4 class="text-sm font-bold text-white mt-1">${n.title || ''}</h4>
+                        <span class="text-[10px] text-slate-400">Published: ${n.date || ''}</span>
+                    </div>
+                    ${n.file ? `<button onclick="openNoticeModal('${n.file}', '${n.title}')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg transition">View Document</button>` : ''}
+                </div>
+            `;
+        });
+        container.innerHTML = noticesHtml;
+    }, (error) => {
+        console.error("Error fetching notices: ", error);
+        container.innerHTML = `<p class="text-xs text-bdRed">Failed to load live notices.</p>`;
+    });
 }
 
 function renderDestinations(category = 'all') {
