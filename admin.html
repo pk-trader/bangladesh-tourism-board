@@ -186,7 +186,7 @@
         <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
             <button onclick="closeModal('sliderModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white mb-4">Add New Hero Video Slide</h3>
-            <form onsave="saveSlider(event)" onsubmit="saveSlider(event)" class="space-y-4">
+            <form onsubmit="saveSlider(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Slide Main Title:</label>
                     <input type="text" id="sliderTitle" placeholder="e.g. BEAUTIFUL BANGLADESH" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
@@ -297,7 +297,7 @@
             <button onclick="closeModal('noticeModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white mb-4">Add Official Notice</h3>
 
-            <form onsubmit="saveNotice(event)" class="space-y-4">
+            <form id="noticeForm" onsubmit="saveNotice(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Notice Title:</label>
                     <input type="text" id="noticeTitle" placeholder="e.g. Travel Advisory for Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
@@ -572,12 +572,12 @@
         }
 
         function deleteBoardMember(id) {
-        // Board members delete logic (Jodi thake)
-        // boardMembers = boardMembers.filter(b => b.id !== id);
-        // localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-        // renderBoardTable();
+            boardMembers = boardMembers.filter(b => b.id !== id);
+            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
+            renderBoardTable();
+        }
 
-       // Render Notice Table Live from Firebase Firestore
+        // Render Notice Table Live from Firebase Firestore
         function renderNoticeTable() {
             const tbody = document.getElementById('noticeTableBody');
             if (!tbody) return;
@@ -660,10 +660,10 @@
         measurementId: "G-LZZR9NF6RG"
       };
 
-     // Initialize Firebase
+      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
-    </script> <!-- Ei closing script tag-ti missing chilo -->
+    </script>
 
     <script src="app.js"></script>
 </body>
