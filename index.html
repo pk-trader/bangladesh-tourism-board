@@ -17,27 +17,43 @@
             }
         }
     </script>
-    <style>
-        /* Styling Google Translate Widget for Dark Theme */
-        .goog-te-gadget-simple {
-            background-color: #0f172a !important;
-            border: 1px solid #065f46 !important;
-            padding: 4px 8px !important;
-            border-radius: 8px !important;
-            font-size: 11px !important;
-        }
-        .goog-te-gadget-simple span, .goog-te-menu-value span {
-            color: #34d399 !important;
-            font-weight: 600 !important;
-        }
-        .goog-te-gadget-icon {
+<style>
+        /* Hide Google Translate Top Banner and iframe */
+        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame {
             display: none !important;
+            visibility: hidden !important;
         }
         body {
             top: 0px !important;
         }
-        .goog-te-banner-frame {
+        .goog-tooltip { display: none !important; }
+        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+        #goog-gt-tt { display: none !important; }
+        
+        /* Professional Styling for Google Translate Dropdown */
+        .goog-te-gadget {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 0px !important;
+            color: transparent !important;
+        }
+        .goog-te-gadget span {
             display: none !important;
+        }
+        .goog-te-combo {
+            background-color: #022c22 !important;
+            color: #34d399 !important;
+            border: 1px solid #059669 !important;
+            padding: 6px 12px !important;
+            border-radius: 10px !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            outline: none !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .goog-te-combo:hover {
+            border-color: #34d399 !important;
         }
     </style>
 </head>
