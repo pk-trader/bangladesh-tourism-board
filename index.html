@@ -17,43 +17,27 @@
             }
         }
     </script>
-<style>
-        /* Hide Google Translate Top Banner and iframe */
-        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame {
+    <style>
+        /* Hide all Google Translate elements, banners & iframes */
+        .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame {
             display: none !important;
             visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
         }
         body {
             top: 0px !important;
+            position: static !important;
         }
-        .goog-tooltip { display: none !important; }
-        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-        #goog-gt-tt { display: none !important; }
-        
-        /* Professional Styling for Google Translate Dropdown */
-        .goog-te-gadget {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 0px !important;
-            color: transparent !important;
-        }
-        .goog-te-gadget span {
+        .goog-tooltip, .goog-text-highlight {
             display: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
         }
-        .goog-te-combo {
-            background-color: #022c22 !important;
-            color: #34d399 !important;
-            border: 1px solid #059669 !important;
-            padding: 6px 12px !important;
-            border-radius: 10px !important;
-            font-size: 11px !important;
-            font-weight: 700 !important;
-            outline: none !important;
-            cursor: pointer !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .goog-te-combo:hover {
-            border-color: #34d399 !important;
+        /* Hidden Google element container */
+        #google_translate_element {
+            display: none !important;
         }
     </style>
 </head>
@@ -94,9 +78,23 @@
                 <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Board Members</button>
             </div>
 
-            <!-- Language Selector Widget -->
-            <div class="flex items-center gap-2">
-                <div id="google_translate_element"></div>
+            <!-- Custom Professional Language Selector Dropdown -->
+            <div class="flex items-center gap-2 relative">
+                <div class="relative">
+                    <select id="customLanguageSelect" onchange="changeLanguage(this.value)" class="bg-slate-950 text-emerald-400 border border-emerald-800/80 rounded-xl px-3 py-1.5 text-xs font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-lg appearance-none pr-7">
+                        <option value="en">🗣️ English</option>
+                        <option value="bn">🗣️ বাংলা (Bengali)</option>
+                        <option value="ar">🗣️ العربية (Arabic)</option>
+                        <option value="fr">🗣️ Français (French)</option>
+                        <option value="es">🗣️ Español (Spanish)</option>
+                        <option value="de">🗣️ Deutsch (German)</option>
+                        <option value="hi">🗣️ हिन्दी (Hindi)</option>
+                        <option value="zh-CN">🗣️ 中文 (Chinese)</option>
+                        <option value="ja">🗣️ 日本語 (Japanese)</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-emerald-400 text-[10px] pointer-events-none"></i>
+                </div>
+
                 <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-xl p-2 focus:outline-none">
                     <i class="fa-solid fa-bars" id="menuIcon"></i>
                 </button>
@@ -215,6 +213,9 @@
         <iframe id="pdfFrame" class="w-full flex-1 border-0 bg-white"></iframe>
     </div>
 
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element"></div>
+
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -236,31 +237,36 @@
       const db = firebase.firestore();
     </script>
 
-    <!-- Google Translate Script -->
-   <!-- Google Translate Script with Auto Banner Cleaner -->
+    <!-- Google Translate API & Custom Handler -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'en',
-                includedLanguages: 'en,bn,ar,hi,es,fr,de,ja,zh-CN',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
             }, 'google_translate_element');
-
-            // Interval to clear Google top banner if it injects
-            setInterval(() => {
-                const banner = document.querySelector('.goog-te-banner-frame');
-                if (banner) {
-                    banner.style.display = 'none';
-                    banner.style.visibility = 'hidden';
-                }
-                if (document.body.style.top !== '0px') {
-                    document.body.style.top = '0px';
-                }
-            }, 100);
         }
+
+        function changeLanguage(langCode) {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+                select.value = langCode;
+                select.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Clean up Google Banner periodically
+        setInterval(() => {
+            const banner = document.querySelector('.goog-te-banner-frame');
+            if (banner) {
+                banner.style.display = 'none';
+            }
+            if (document.body.style.top !== '0px') {
+                document.body.style.top = '0px';
+            }
+        }, 100);
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <!-- JAVASCRIPT LOGIC -->
     <script src="app.js"></script>
 
