@@ -1,224 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTB Admin Panel | Management</title>
+    <title>Admin Dashboard | Bangladesh Tourism Board</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22' },
+                    colors: { bdGreen: '#006a4e', bdRed: '#f42a41', bdDark: '#022c22', bdGold: '#d97706' },
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
+<body class="bg-slate-900 text-slate-100 font-sans antialiased p-4 md:p-8">
 
-    <!-- LOGIN OVERLAY -->
-    <div id="loginOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center">
-            <div class="w-16 h-16 bg-bdGreen text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg border border-emerald-400/30">
-                <i class="fa-solid fa-user-shield"></i>
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-950 p-6 rounded-3xl border border-emerald-900/40 shadow-xl gap-4">
+            <div>
+                <h1 class="text-2xl font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Admin Management Dashboard
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">Manage tourist destinations, hotels, cultural fairs, board members, and notices live via Firebase.</p>
             </div>
-            <h2 class="text-2xl font-extrabold text-white">BTB CMS Portal</h2>
-            <p class="text-xs text-slate-400 mt-1 mb-6">Enter system passcode to access dashboard</p>
-
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <input type="password" id="passcodeInput" placeholder="Enter Admin Passcode" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-sm font-mono tracking-widest text-white focus:outline-none focus:border-emerald-500">
-                <p id="loginError" class="text-xs text-bdRed font-bold hidden">Invalid passcode! Try again.</p>
-                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">Unlock CMS Dashboard</button>
-            </form>
+            <a href="index.html" target="_blank" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow">
+                <i class="fa-solid fa-globe mr-1"></i> View Live Website
+            </a>
         </div>
-    </div>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <div id="dashboardContent" class="hidden min-h-screen flex flex-col">
-        <header class="bg-slate-900 border-b border-emerald-900/50 sticky top-0 z-30">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-bdGreen flex items-center justify-center text-emerald-300 font-bold text-sm">BTB</span>
-                    <div>
-                        <h1 class="text-sm font-bold text-white">Bangladesh Tourism Board</h1>
-                        <p class="text-[10px] text-emerald-400 font-medium">Control Management System (CMS)</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <a href="index.html" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700"><i class="fa-solid fa-globe mr-1"></i> View Live Site</a>
-                    <button onclick="handleLogout()" class="px-3 py-1.5 bg-red-950/60 text-bdRed hover:bg-red-900/50 text-xs font-bold rounded-lg transition border border-red-800/40"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
-                </div>
+        <!-- 1. DESTINATIONS MANAGEMENT -->
+        <div class="bg-slate-950 p-6 rounded-3xl border border-emerald-900/40 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Tourist Destinations & Nearby Hotels
+                </h2>
+                <button onclick="openDestModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> Add Destination
+                </button>
             </div>
-        </header>
-
-        <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-10">
-            
-            <!-- SECTION 1: HERO SLIDERS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-film text-emerald-400"></i> Hero Video Sliders
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage home page hero videos using file paths (e.g. videos/bangladesh.mp4)</p>
-                    </div>
-                    <button onclick="openModal('sliderModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add New Hero Slide
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Title</th>
-                                <th class="py-3 px-2">Subtitle</th>
-                                <th class="py-3 px-2">Video Path</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="slidersTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 2: DESTINATIONS & HOTELS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Tourist Destinations & Nearby Hotels
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage destinations with short/full descriptions and attached hotels</p>
-                    </div>
-                    <button onclick="openModal('destModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Destination
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Name</th>
-                                <th class="py-3 px-2">Category</th>
-                                <th class="py-3 px-2">District</th>
-                                <th class="py-3 px-2">Hotels Attached</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="destTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 3: BOARD MEMBERS -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-user-tie text-emerald-400"></i> Board Members
-                        </h2>
-                        <p class="text-xs text-slate-400">Manage management board members with biographies</p>
-                    </div>
-                    <button onclick="openModal('boardModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Board Member
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Member Name</th>
-                                <th class="py-3 px-2">Designation / Role</th>
-                                <th class="py-3 px-2">Email / Contact</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="boardTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION 4: NOTICE BOARD -->
-            <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-bullhorn text-emerald-400"></i> Notice Board & News
-                        </h2>
-                        <p class="text-xs text-slate-400">Publish notices, climate advisories, and official circulars</p>
-                    </div>
-                    <button onclick="openModal('noticeModal')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add Notice
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Notice Title</th>
-                                <th class="py-3 px-2">Category</th>
-                                <th class="py-3 px-2">Date</th>
-                                <th class="py-3 px-2 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="noticeTableBody" class="text-xs divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- MODAL 1: HERO SLIDER -->
-    <div id="sliderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('sliderModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add New Hero Video Slide</h3>
-            <form onsubmit="saveSlider(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Slide Main Title:</label>
-                    <input type="text" id="sliderTitle" placeholder="e.g. BEAUTIFUL BANGLADESH" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Subtitle / Tagline:</label>
-                    <input type="text" id="sliderSub" placeholder="e.g. Land of Greenery, Rivers & Endless Heritage" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-emerald-400 mb-1">Video File Path:</label>
-                    <input type="text" id="sliderVideoUrl" placeholder="e.g. videos/cox's_bajar.mp4" required class="w-full bg-slate-950 border border-emerald-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Save & Publish Slide</button>
-            </form>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase">
+                            <th class="py-3 px-4">ID</th>
+                            <th class="py-3 px-4">Name</th>
+                            <th class="py-3 px-4">Category</th>
+                            <th class="py-3 px-4">District</th>
+                            <th class="py-3 px-4">Hotels Attached</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDestinationsTable">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <!-- 2. CULTURAL PROGRAMS & FAIRS MANAGEMENT -->
+        <div class="bg-slate-950 p-6 rounded-3xl border border-emerald-900/40 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-masks-theater text-amber-400"></i> Cultural Programs & Festivals
+                </h2>
+                <button onclick="openCulturalModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> Add Festival
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase">
+                            <th class="py-3 px-4">Event Name</th>
+                            <th class="py-3 px-4">Date / Season</th>
+                            <th class="py-3 px-4">Location</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminCulturalTable">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. BOARD MEMBERS MANAGEMENT -->
+        <div class="bg-slate-950 p-6 rounded-3xl border border-emerald-900/40 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie text-emerald-400"></i> Board Members Management
+                </h2>
+                <button onclick="openBoardModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> Add Member
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase">
+                            <th class="py-3 px-4">Name</th>
+                            <th class="py-3 px-4">Role</th>
+                            <th class="py-3 px-4">Contact</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminBoardTable">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. NOTICES & BULLETINS MANAGEMENT -->
+        <div class="bg-slate-950 p-6 rounded-3xl border border-emerald-900/40 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn text-bdRed"></i> Official Notices & Bulletins
+                </h2>
+                <button onclick="openNoticeModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> Publish Notice
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase">
+                            <th class="py-3 px-4">Title</th>
+                            <th class="py-3 px-4">Category</th>
+                            <th class="py-3 px-4">Date</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminNoticeTable">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <!-- MODAL 2: DESTINATIONS -->
-    <div id="destModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('destModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Destination, Descriptions & Hotels</h3>
-
-            <form onsubmit="saveDestination(event)" class="space-y-4">
+    <!-- MODAL: ADD/EDIT DESTINATION -->
+    <div id="destModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+            <h3 id="destModalTitle" class="text-lg font-extrabold text-white">Add/Edit Destination</h3>
+            <input type="hidden" id="editDestId">
+            <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Destination Name:</label>
-                    <input type="text" id="destName" placeholder="e.g. Cox's Bazar" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Destination Name</label>
+                    <input type="text" id="destName" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Category:</label>
-                        <select id="destCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <label class="block text-slate-400 mb-1 font-semibold">Category</label>
+                        <select id="destCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                             <option value="beaches">Beaches & Islands</option>
                             <option value="hills">Hills & Mountains</option>
                             <option value="heritage">Heritage & Culture</option>
@@ -226,430 +168,110 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">District (64 Districts):</label>
-                        <select id="destDistrict" required class="districtSelect w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"></select>
+                        <label class="block text-slate-400 mb-1 font-semibold">District</label>
+                        <input type="text" id="destDistrict" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                     </div>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Short Description (Card view):</label>
-                    <input type="text" id="destShortDesc" placeholder="e.g. World's longest natural unbroken sandy sea beach." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Image URL</label>
+                    <input type="text" id="destImage" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Full Detailed Description (Popup view):</label>
-                    <textarea id="destFullDesc" placeholder="Write full history, beauty and travel guide..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 h-20 resize-none"></textarea>
+                    <label class="block text-slate-400 mb-1 font-semibold">Short Description</label>
+                    <textarea id="destShortDesc" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Destination Cover Image:</label>
-                    <input type="file" id="destImageFile" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
+                    <label class="block text-slate-400 mb-1 font-semibold">Full Details</label>
+                    <textarea id="destFullDesc" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
                 </div>
-
-                <div class="border-t border-slate-800 pt-4 mt-2">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-emerald-400"><i class="fa-solid fa-hotel mr-1"></i> Nearby Hotels & Resorts (Rating Sorted):</label>
-                        <button type="button" onclick="addHotelRow()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-emerald-300 px-2.5 py-1 rounded-lg border border-slate-700 font-bold transition">+ Add Hotel</button>
-                    </div>
-                    <div id="hotelRowsContainer" class="space-y-3"></div>
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-4">Publish Destination & Hotels</button>
-            </form>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeDestModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveDestination()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Save Destination</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL 3: BOARD MEMBERS -->
-    <div id="boardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('boardModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Board Member</h3>
-
-            <form onsubmit="saveBoardMember(event)" class="space-y-4">
+    <!-- MODAL: ADD CULTURAL FESTIVAL -->
+    <div id="culturalModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-800/60 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+            <h3 class="text-lg font-extrabold text-white">Add Cultural Festival</h3>
+            <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Member Name:</label>
-                    <input type="text" id="boardName" placeholder="e.g. Mr. John Doe" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Festival Name</label>
+                    <input type="text" id="cultName" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Designation / Role:</label>
-                    <input type="text" id="boardRole" placeholder="e.g. Chief Executive Officer (CEO)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Date / Season</label>
+                    <input type="text" id="cultDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. April 14 (Pohela Boishakh)">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Email / Contact info:</label>
-                    <input type="text" id="boardContact" placeholder="e.g. ceo@tourism.gov.bd" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Location</label>
+                    <input type="text" id="cultLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Member Profile / Biography:</label>
-                    <textarea id="boardBio" placeholder="Enter background, qualification, and short bio..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 h-20 resize-none"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Member Photo:</label>
-                    <input type="file" id="boardImageFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Board Member</button>
-            </form>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeCulturalModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveCultural()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-xs">Save Festival</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL 4: NOTICE BOARD -->
-    <div id="noticeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeModal('noticeModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white mb-4">Add Official Notice</h3>
-
-            <form id="noticeForm" onsubmit="saveNotice(event)" class="space-y-4">
+    <!-- MODAL: ADD BOARD MEMBER -->
+    <div id="boardModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+            <h3 class="text-lg font-extrabold text-white">Add Board Member</h3>
+            <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice Title:</label>
-                    <input type="text" id="noticeTitle" placeholder="e.g. Travel Advisory for Sundarbans" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1 font-semibold">Full Name</label>
+                    <input type="text" id="boardName" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Category:</label>
-                    <select id="noticeCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="Press Release">Press Release</option>
-                        <option value="Climate">Climate</option>
-                        <option value="Travel Advisory">Travel Advisory</option>
-                        <option value="Circular">Official Circular</option>
-                    </select>
+                    <label class="block text-slate-400 mb-1 font-semibold">Role / Designation</label>
+                    <input type="text" id="boardRole" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Notice File / PDF / Image:</label>
-                    <input type="file" id="noticeFile" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-300 hover:file:bg-emerald-800/50">
+                    <label class="block text-slate-400 mb-1 font-semibold">Email / Contact</label>
+                    <input type="text" id="boardContact" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-lg mt-2">Publish Notice</button>
-            </form>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeBoardModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveBoard()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Save Member</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        const AUTH_PASS = "admin123";
-        const bdDistricts = [
-            "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogra", "Brahmanbaria", "Chandpur",
-            "Chittagong", "Chuadanga", "Comilla", "Cox's Bazar", "Dhaka", "Dinajpur", "Faridpur", "Feni",
-            "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jamalpur", "Jessore", "Jhalokati", "Jhenaidah",
-            "Joypurhat", "Khagrachhari", "Khulna", "Kishoreganj", "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat",
-            "Madaripur", "Magura", "Manikganj", "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon",
-            "Narail", "Narayanganj", "Narsingdi", "Natore", "Nawabganj", "Netrokona", "Nilphamari", "Noakhali",
-            "Pabna", "Panchagarh", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangamati", "Rangpur",
-            "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon"
-        ];
-
-        function populateDistrictDropdowns() {
-            document.querySelectorAll('.districtSelect').forEach(select => {
-                select.innerHTML = bdDistricts.map(d => `<option value="${d}">${d}</option>`).join('');
-            });
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            if(document.getElementById('passcodeInput').value === AUTH_PASS) {
-                sessionStorage.setItem('btb_auth', 'true');
-                checkAuth();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
-            }
-        }
-
-        function checkAuth() {
-            if(sessionStorage.getItem('btb_auth') === 'true') {
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('dashboardContent').classList.remove('hidden');
-                populateDistrictDropdowns();
-                renderSlidersTable();
-                renderDestinationsTable();
-                renderBoardTable();
-                renderNoticeTable();
-            } else {
-                document.getElementById('loginOverlay').classList.remove('hidden');
-                document.getElementById('dashboardContent').classList.add('hidden');
-            }
-        }
-
-        function handleLogout() {
-            sessionStorage.removeItem('btb_auth');
-            checkAuth();
-        }
-
-        function openModal(id) { 
-            document.getElementById(id).classList.remove('hidden'); 
-            if(id === 'destModal' && document.getElementById('hotelRowsContainer').children.length === 0) {
-                addHotelRow();
-            }
-        }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function convertToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        let hotelRowCount = 0;
-        function addHotelRow() {
-            hotelRowCount++;
-            const container = document.getElementById('hotelRowsContainer');
-            const row = document.createElement('div');
-            row.id = `hotelRow_${hotelRowCount}`;
-            row.className = "p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-2 relative";
-            row.innerHTML = `
-                <button type="button" onclick="removeHotelRow(${hotelRowCount})" class="absolute top-2 right-2 text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" placeholder="Hotel / Resort Name" class="hotel-name w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none" required>
-                    <select class="hotel-rating w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
-                        <option value="5">⭐⭐⭐⭐⭐ (5 Star)</option>
-                        <option value="4">⭐⭐⭐⭐ (4 Star)</option>
-                        <option value="3">⭐⭐⭐ (3 Star)</option>
-                        <option value="2">⭐⭐ (2 Star)</option>
-                        <option value="1">⭐ (1 Star)</option>
-                    </select>
+    <!-- MODAL: ADD NOTICE -->
+    <div id="noticeModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+            <h3 class="text-lg font-extrabold text-white">Publish Notice</h3>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1 font-semibold">Notice Title</label>
+                    <input type="text" id="noticeTitle" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
                 <div>
-                    <input type="url" placeholder="Official Website Link (e.g. https://sayemanresort.com)" class="hotel-url w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-emerald-400 focus:outline-none" required>
+                    <label class="block text-slate-400 mb-1 font-semibold">Category</label>
+                    <input type="text" id="noticeCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" value="General">
                 </div>
                 <div>
-                    <textarea placeholder="Short Description / Amenities..." class="hotel-desc w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none resize-none h-12"></textarea>
+                    <label class="block text-slate-400 mb-1 font-semibold">Date</label>
+                    <input type="text" id="noticeDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. 2026-10-19">
                 </div>
-                <div>
-                    <label class="block text-[10px] text-slate-400 mb-1">Hotel Cover Image:</label>
-                    <input type="file" accept="image/*" class="hotel-img w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:bg-slate-800 file:text-emerald-300">
-                </div>
-            `;
-            container.appendChild(row);
-        }
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeNoticeModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveNotice()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Publish</button>
+            </div>
+        </div>
+    </div>
 
-        function removeHotelRow(id) {
-            const row = document.getElementById(`hotelRow_${id}`);
-            if(row) row.remove();
-        }
-
-        let sliders = JSON.parse(localStorage.getItem('btb_sliders')) || [
-            { id: 1, title: "BEAUTIFUL BANGLADESH", sub: "Land of Greenery, Rivers & Endless Heritage", video: "videos/bangladesh.mp4" }
-        ];
-
-        function renderSlidersTable() {
-            const tbody = document.getElementById('slidersTableBody');
-            tbody.innerHTML = sliders.map(s => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${s.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${s.title}</td>
-                    <td class="py-3 px-2 text-slate-300 max-w-xs truncate">${s.sub}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-mono text-[11px] max-w-xs truncate">${s.video}</td>
-                    <td class="py-3 px-2 text-right">
-                        <button onclick="deleteSlider(${s.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed hover:bg-red-900/50 rounded-lg border border-red-800/40 text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function saveSlider(e) {
-            e.preventDefault();
-            sliders.push({ 
-                id: Date.now(), 
-                title: document.getElementById('sliderTitle').value, 
-                sub: document.getElementById('sliderSub').value, 
-                video: document.getElementById('sliderVideoUrl').value.trim() 
-            });
-            localStorage.setItem('btb_sliders', JSON.stringify(sliders));
-            renderSlidersTable();
-            closeModal('sliderModal');
-            document.getElementById('sliderTitle').value = "";
-            document.getElementById('sliderSub').value = "";
-            document.getElementById('sliderVideoUrl').value = "";
-            alert("Hero Slide published successfully!");
-        }
-
-        function deleteSlider(id) {
-            sliders = sliders.filter(s => s.id !== id);
-            localStorage.setItem('btb_sliders', JSON.stringify(sliders));
-            renderSlidersTable();
-        }
-
-        let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-
-        function renderDestinationsTable() {
-            const tbody = document.getElementById('destTableBody');
-            tbody.innerHTML = destinations.map(d => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${d.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${d.name}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold uppercase text-[10px]">${d.category}</td>
-                    <td class="py-3 px-2 text-slate-300">${d.district}</td>
-                    <td class="py-3 px-2 font-mono text-xs text-yellow-400 font-bold">${d.hotels ? d.hotels.length : 0} Hotels</td>
-                    <td class="py-3 px-2 text-right">
-                        <button onclick="deleteDestination(${d.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        async function saveDestination(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById('destImageFile');
-            let imageBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            const hotelRows = document.querySelectorAll('#hotelRowsContainer > div');
-            let linkedHotels = [];
-
-            for (let row of hotelRows) {
-                const hName = row.querySelector('.hotel-name').value.trim();
-                const hRating = parseInt(row.querySelector('.hotel-rating').value);
-                const hUrl = row.querySelector('.hotel-url').value.trim();
-                const hDesc = row.querySelector('.hotel-desc').value.trim();
-                const hFileInput = row.querySelector('.hotel-img');
-
-                if(hName !== "") {
-                    let hImg = hFileInput.files[0] ? await convertToBase64(hFileInput.files[0]) : "";
-                    linkedHotels.push({ name: hName, rating: hRating, url: hUrl, description: hDesc, image: hImg });
-                }
-            }
-            linkedHotels.sort((a, b) => b.rating - a.rating);
-
-            destinations.push({ 
-                id: Date.now(), 
-                name: document.getElementById('destName').value, 
-                category: document.getElementById('destCategory').value, 
-                district: document.getElementById('destDistrict').value, 
-                shortDesc: document.getElementById('destShortDesc').value,
-                fullDesc: document.getElementById('destFullDesc').value,
-                image: imageBase64,
-                hotels: linkedHotels 
-            });
-
-            localStorage.setItem('btb_destinations', JSON.stringify(destinations));
-            renderDestinationsTable();
-            closeModal('destModal');
-            document.getElementById('destName').value = "";
-            document.getElementById('destShortDesc').value = "";
-            document.getElementById('destFullDesc').value = "";
-            fileInput.value = "";
-            document.getElementById('hotelRowsContainer').innerHTML = "";
-            alert("Destination & hotels published successfully!");
-        }
-
-        function deleteDestination(id) {
-            destinations = destinations.filter(d => d.id !== id);
-            localStorage.setItem('btb_destinations', JSON.stringify(destinations));
-            renderDestinationsTable();
-        }
-
-        let boardMembers = JSON.parse(localStorage.getItem('btb_board_members')) || [];
-        function renderBoardTable() {
-            const tbody = document.getElementById('boardTableBody');
-            tbody.innerHTML = boardMembers.map(b => `
-                <tr>
-                    <td class="py-3 px-2 font-mono text-slate-400">#${b.id}</td>
-                    <td class="py-3 px-2 font-bold text-white">${b.name}</td>
-                    <td class="py-3 px-2 text-emerald-400 font-semibold text-[11px]">${b.role}</td>
-                    <td class="py-3 px-2 text-slate-300">${b.contact}</td>
-                    <td class="py-3 px-2 text-right"><button onclick="deleteBoardMember(${b.id})" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-
-        async function saveBoardMember(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById('boardImageFile');
-            let imgBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            boardMembers.push({ 
-                id: Date.now(), 
-                name: document.getElementById('boardName').value, 
-                role: document.getElementById('boardRole').value, 
-                contact: document.getElementById('boardContact').value, 
-                bio: document.getElementById('boardBio').value,
-                image: imgBase64 
-            });
-            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-            renderBoardTable();
-            closeModal('boardModal');
-            document.getElementById('boardName').value = "";
-            document.getElementById('boardRole').value = "";
-            document.getElementById('boardContact').value = "";
-            document.getElementById('boardBio').value = "";
-            alert("Board member published!");
-        }
-
-        function deleteBoardMember(id) {
-            boardMembers = boardMembers.filter(b => b.id !== id);
-            localStorage.setItem('btb_board_members', JSON.stringify(boardMembers));
-            renderBoardTable();
-        }
-
-        // Render Notice Table Live from Firebase Firestore
-        function renderNoticeTable() {
-            const tbody = document.getElementById('noticeTableBody');
-            if (!tbody) return;
-
-            db.collection('notices').onSnapshot((snapshot) => {
-                tbody.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const n = doc.data();
-                    const docId = doc.id;
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="py-3 px-2 font-mono text-slate-400">#${docId.slice(0, 5)}</td>
-                            <td class="py-3 px-2 font-bold text-white">${n.title}</td>
-                            <td class="py-3 px-2 text-emerald-400 font-semibold text-[10px]">${n.category}</td>
-                            <td class="py-3 px-2 text-slate-300">${n.date}</td>
-                            <td class="py-3 px-2 text-right"><button onclick="deleteNotice('${docId}')" class="px-2.5 py-1 bg-red-950/60 text-bdRed rounded-lg text-[11px] font-bold">Delete</button></td>
-                        </tr>
-                    `;
-                });
-            });
-        }
-
-        // Save Notice to Firebase Firestore
-        async function saveNotice(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById('noticeFile');
-            let fileBase64 = fileInput.files[0] ? await convertToBase64(fileInput.files[0]) : "";
-
-            const noticeData = {
-                title: document.getElementById('noticeTitle').value,
-                category: document.getElementById('noticeCategory').value,
-                date: new Date().toLocaleDateString(),
-                file: fileBase64,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                await db.collection('notices').add(noticeData);
-                document.getElementById('noticeForm').reset();
-                closeModal('noticeModal');
-                alert("Notice published successfully to Firebase!");
-            } catch (err) {
-                console.error("Error adding notice: ", err);
-                alert("Failed to publish notice.");
-            }
-        }
-
-        // Delete Notice from Firebase Firestore
-        async function deleteNotice(id) {
-            if (confirm("Are you sure you want to delete this notice?")) {
-                try {
-                    await db.collection('notices').doc(id).delete();
-                    alert("Notice deleted successfully!");
-                } catch (err) {
-                    console.error("Error deleting notice: ", err);
-                    alert("Failed to delete notice.");
-                }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof checkAuth === 'function') checkAuth();
-            renderNoticeTable();
-        });
-    </script>
-    
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-      // Firebase Config
       const firebaseConfig = {
         apiKey: "AIzaSyBwiOJy8euK1gVYvu-zhO_UBEctgux9pBw",
         authDomain: "bangladesh-tourism-board.firebaseapp.com",
@@ -659,12 +281,192 @@
         appId: "1:901892635160:web:2dbdaa822ffec58824e16d",
         measurementId: "G-LZZR9NF6RG"
       };
-
-      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
-    </script>
 
-    <script src="app.js"></script>
+      // Render Admin Tables
+      function renderAdminTables() {
+          // Destinations
+          const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+          const destTable = document.getElementById('adminDestinationsTable');
+          destTable.innerHTML = destinations.map(d => `
+              <tr class="border-b border-slate-800/60 hover:bg-slate-900">
+                  <td class="py-3 px-4 font-mono">${d.id}</td>
+                  <td class="py-3 px-4 font-bold text-white">${d.name}</td>
+                  <td class="py-3 px-4 uppercase text-emerald-400">${d.category}</td>
+                  <td class="py-3 px-4">${d.district}</td>
+                  <td class="py-3 px-4 text-yellow-400 font-mono">${d.hotels ? d.hotels.length : 0} Hotels</td>
+                  <td class="py-3 px-4 text-right space-x-2">
+                      <button onclick="editDestination(${d.id})" class="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg transition" title="Edit Destination"><i class="fa-solid fa-pen"></i></button>
+                      <button onclick="deleteDestination(${d.id})" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition" title="Delete Destination"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+              </tr>
+          `).join('') || `<tr><td colspan="6" class="text-center py-4 text-slate-500">No destinations found.</td></tr>`;
+
+          // Cultural Festivals
+          const cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
+          const cultTable = document.getElementById('adminCulturalTable');
+          cultTable.innerHTML = cultural.map((c, index) => `
+              <tr class="border-b border-slate-800/60 hover:bg-slate-900">
+                  <td class="py-3 px-4 font-bold text-white">${c.name}</td>
+                  <td class="py-3 px-4 text-amber-400">${c.date}</td>
+                  <td class="py-3 px-4">${c.location}</td>
+                  <td class="py-3 px-4 text-right">
+                      <button onclick="deleteCultural(${index})" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+              </tr>
+          `).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-500">No cultural events added.</td></tr>`;
+
+          // Board Members
+          const members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
+          const boardTable = document.getElementById('adminBoardTable');
+          boardTable.innerHTML = members.map((m, index) => `
+              <tr class="border-b border-slate-800/60 hover:bg-slate-900">
+                  <td class="py-3 px-4 font-bold text-white">${m.name}</td>
+                  <td class="py-3 px-4 text-emerald-400">${m.role}</td>
+                  <td class="py-3 px-4">${m.contact}</td>
+                  <td class="py-3 px-4 text-right">
+                      <button onclick="deleteBoard(${index})" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+              </tr>
+          `).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-500">No board members added.</td></tr>`;
+
+          // Notices
+          db.collection('notices').get().then(snapshot => {
+              let noticeHtml = '';
+              snapshot.forEach(doc => {
+                  const n = doc.data();
+                  noticeHtml += `
+                      <tr class="border-b border-slate-800/60 hover:bg-slate-900">
+                          <td class="py-3 px-4 font-bold text-white">${n.title}</td>
+                          <td class="py-3 px-4 uppercase text-emerald-400">${n.category}</td>
+                          <td class="py-3 px-4">${n.date}</td>
+                          <td class="py-3 px-4 text-right">
+                              <button onclick="deleteNotice('${doc.id}')" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                          </td>
+                      </tr>
+                  `;
+              });
+              document.getElementById('adminNoticeTable').innerHTML = noticeHtml || `<tr><td colspan="4" class="text-center py-4 text-slate-500">No notices found.</td></tr>`;
+          });
+      }
+
+      // Modals Control
+      function openDestModal() {
+          document.getElementById('editDestId').value = '';
+          document.getElementById('destModalTitle').textContent = 'Add Destination';
+          document.getElementById('destName').value = '';
+          document.getElementById('destDistrict').value = '';
+          document.getElementById('destImage').value = '';
+          document.getElementById('destShortDesc').value = '';
+          document.getElementById('destFullDesc').value = '';
+          document.getElementById('destModal').classList.remove('hidden');
+      }
+      function closeDestModal() { document.getElementById('destModal').classList.add('hidden'); }
+
+      function editDestination(id) {
+          const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+          const dest = destinations.find(d => d.id === id);
+          if(dest) {
+              document.getElementById('editDestId').value = dest.id;
+              document.getElementById('destModalTitle').textContent = 'Edit Destination';
+              document.getElementById('destName').value = dest.name;
+              document.getElementById('destCategory').value = dest.category;
+              document.getElementById('destDistrict').value = dest.district;
+              document.getElementById('destImage').value = dest.image || '';
+              document.getElementById('destShortDesc').value = dest.shortDesc || '';
+              document.getElementById('destFullDesc').value = dest.fullDesc || '';
+              document.getElementById('destModal').classList.remove('hidden');
+          }
+      }
+
+      function saveDestination() {
+          const id = document.getElementById('editDestId').value;
+          const name = document.getElementById('destName').value;
+          const category = document.getElementById('destCategory').value;
+          const district = document.getElementById('destDistrict').value;
+          const image = document.getElementById('destImage').value;
+          const shortDesc = document.getElementById('destShortDesc').value;
+          const fullDesc = document.getElementById('destFullDesc').value;
+
+          let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+          if(id) {
+              destinations = destinations.map(d => d.id == id ? {...d, name, category, district, image, shortDesc, fullDesc} : d);
+          } else {
+              const newDest = { id: Date.now(), name, category, district, image, shortDesc, fullDesc, hotels: [] };
+              destinations.push(newDest);
+          }
+          localStorage.setItem('btb_destinations', JSON.stringify(destinations));
+          closeDestModal();
+          renderAdminTables();
+      }
+
+      function deleteDestination(id) {
+          let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+          destinations = destinations.filter(d => d.id !== id);
+          localStorage.setItem('btb_destinations', JSON.stringify(destinations));
+          renderAdminTables();
+      }
+
+      // Cultural Modals
+      function openCulturalModal() { document.getElementById('culturalModal').classList.remove('hidden'); }
+      function closeCulturalModal() { document.getElementById('culturalModal').classList.add('hidden'); }
+      function saveCultural() {
+          const name = document.getElementById('cultName').value;
+          const date = document.getElementById('cultDate').value;
+          const location = document.getElementById('cultLocation').value;
+          let cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
+          cultural.push({ name, date, location });
+          localStorage.setItem('btb_cultural', JSON.stringify(cultural));
+          closeCulturalModal();
+          renderAdminTables();
+      }
+      function deleteCultural(index) {
+          let cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
+          cultural.splice(index, 1);
+          localStorage.setItem('btb_cultural', JSON.stringify(cultural));
+          renderAdminTables();
+      }
+
+      // Board Modals
+      function openBoardModal() { document.getElementById('boardModal').classList.remove('hidden'); }
+      function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
+      function saveBoard() {
+          const name = document.getElementById('boardName').value;
+          const role = document.getElementById('boardRole').value;
+          const contact = document.getElementById('boardContact').value;
+          let members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
+          members.push({ name, role, contact });
+          localStorage.setItem('btb_board_members', JSON.stringify(members));
+          closeBoardModal();
+          renderAdminTables();
+      }
+      function deleteBoard(index) {
+          let members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
+          members.splice(index, 1);
+          localStorage.setItem('btb_board_members', JSON.stringify(members));
+          renderAdminTables();
+      }
+
+      // Notice Modals
+      function openNoticeModal() { document.getElementById('noticeModal').classList.remove('hidden'); }
+      function closeNoticeModal() { document.getElementById('noticeModal').classList.add('hidden'); }
+      function saveNotice() {
+          const title = document.getElementById('noticeTitle').value;
+          const category = document.getElementById('noticeCategory').value;
+          const date = document.getElementById('noticeDate').value;
+          db.collection('notices').add({ title, category, date }).then(() => {
+              closeNoticeModal();
+              renderAdminTables();
+          });
+      }
+      function deleteNotice(docId) {
+          db.collection('notices').doc(docId).delete().then(() => {
+              renderAdminTables();
+          });
+      }
+
+      window.addEventListener('DOMContentLoaded', renderAdminTables);
+    </script>
 </body>
 </html>
