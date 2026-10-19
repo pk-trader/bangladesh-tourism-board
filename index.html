@@ -18,13 +18,22 @@
         }
     </script>
     <style>
-        /* Hide all Google Translate elements, banners & iframes */
-        .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame {
+        /* Force Hide ALL Google Default Banners, Popups, and Icons */
+        .goog-te-banner-frame, 
+        .goog-te-banner-frame.skiptranslate, 
+        iframe.goog-te-banner-frame, 
+        #goog-gt-tt, 
+        .goog-te-balloon-frame,
+        .goog-te-gadget,
+        .goog-te-gadget-simple,
+        .skiptranslate {
             display: none !important;
             visibility: hidden !important;
+            opacity: 0 !important;
             height: 0 !important;
             width: 0 !important;
-            opacity: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
         }
         body {
             top: 0px !important;
@@ -35,13 +44,12 @@
             background-color: transparent !important;
             box-shadow: none !important;
         }
-        /* Hidden Google element container */
-        #google_translate_element {
-            display: none !important;
-        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased">
+
+    <!-- Hidden Default Google Element Container -->
+    <div id="google_translate_element" style="display:none !important;"></div>
 
     <!-- Top Alert Bar -->
     <div class="bg-bdDark border-b border-emerald-800/40 text-xs py-2 px-4">
@@ -81,16 +89,16 @@
             <!-- Custom Professional Language Selector Dropdown -->
             <div class="flex items-center gap-2 relative">
                 <div class="relative">
-                    <select id="customLanguageSelect" onchange="changeLanguage(this.value)" class="bg-slate-950 text-emerald-400 border border-emerald-800/80 rounded-xl px-3 py-1.5 text-xs font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-lg appearance-none pr-7">
-                        <option value="en">🗣️ English</option>
-                        <option value="bn">🗣️ বাংলা (Bengali)</option>
-                        <option value="ar">🗣️ العربية (Arabic)</option>
-                        <option value="fr">🗣️ Français (French)</option>
-                        <option value="es">🗣️ Español (Spanish)</option>
-                        <option value="de">🗣️ Deutsch (German)</option>
-                        <option value="hi">🗣️ हिन्दी (Hindi)</option>
-                        <option value="zh-CN">🗣️ 中文 (Chinese)</option>
-                        <option value="ja">🗣️ 日本語 (Japanese)</option>
+                    <select id="customLanguageSelect" onchange="triggerGoogleTranslate(this.value)" class="bg-slate-950 text-emerald-400 border border-emerald-800/80 rounded-xl px-3 py-1.5 text-xs font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-lg appearance-none pr-7">
+                        <option value="en">🗣️ Language: English</option>
+                        <option value="bn">🗣️ Language: বাংলা</option>
+                        <option value="ar">🗣️ Language: العربية</option>
+                        <option value="fr">🗣️ Language: Français</option>
+                        <option value="es">🗣️ Language: Español</option>
+                        <option value="de">🗣️ Language: Deutsch</option>
+                        <option value="hi">🗣️ Language: हिन्दी</option>
+                        <option value="zh-CN">🗣️ Language: 中文</option>
+                        <option value="ja">🗣️ Language: 日本語</option>
                     </select>
                     <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-emerald-400 text-[10px] pointer-events-none"></i>
                 </div>
@@ -213,9 +221,6 @@
         <iframe id="pdfFrame" class="w-full flex-1 border-0 bg-white"></iframe>
     </div>
 
-    <!-- Hidden Google Translate Element -->
-    <div id="google_translate_element"></div>
-
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -237,7 +242,7 @@
       const db = firebase.firestore();
     </script>
 
-    <!-- Google Translate API & Custom Handler -->
+    <!-- Google Translate Invisible Engine & Custom Handler -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -246,19 +251,19 @@
             }, 'google_translate_element');
         }
 
-        function changeLanguage(langCode) {
-            const select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.value = langCode;
-                select.dispatchEvent(new Event('change'));
+        function triggerGoogleTranslate(langCode) {
+            const selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+                selectElement.value = langCode;
+                selectElement.dispatchEvent(new Event('change'));
             }
         }
 
-        // Clean up Google Banner periodically
+        // Keep hiding Google's top iframe permanently
         setInterval(() => {
             const banner = document.querySelector('.goog-te-banner-frame');
             if (banner) {
-                banner.style.display = 'none';
+                banner.remove();
             }
             if (document.body.style.top !== '0px') {
                 document.body.style.top = '0px';
