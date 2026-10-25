@@ -28,7 +28,7 @@
                 <h1 class="text-2xl font-extrabold text-white flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-emerald-400"></i> Admin Management Dashboard
                 </h1>
-                <p class="text-xs text-slate-400 mt-1">Manage tourist destinations, hotels, cultural fairs, board members, and notices live via Firebase.</p>
+                <p class="text-xs text-slate-400 mt-1">Manage tourist destinations, hotels with images & descriptions, cultural fairs, board members, and PDF notices.</p>
             </div>
             <a href="index.html" target="_blank" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow">
                 <i class="fa-solid fa-globe mr-1"></i> View Live Website
@@ -57,9 +57,7 @@
                             <th class="py-3 px-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminDestinationsTable">
-                        <!-- Loaded via JS -->
-                    </tbody>
+                    <tbody id="adminDestinationsTable"></tbody>
                 </table>
             </div>
         </div>
@@ -84,9 +82,7 @@
                             <th class="py-3 px-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminCulturalTable">
-                        <!-- Loaded via JS -->
-                    </tbody>
+                    <tbody id="adminCulturalTable"></tbody>
                 </table>
             </div>
         </div>
@@ -111,9 +107,7 @@
                             <th class="py-3 px-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminBoardTable">
-                        <!-- Loaded via JS -->
-                    </tbody>
+                    <tbody id="adminBoardTable"></tbody>
                 </table>
             </div>
         </div>
@@ -138,9 +132,7 @@
                             <th class="py-3 px-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminNoticeTable">
-                        <!-- Loaded via JS -->
-                    </tbody>
+                    <tbody id="adminNoticeTable"></tbody>
                 </table>
             </div>
         </div>
@@ -149,8 +141,8 @@
 
     <!-- MODAL: ADD/EDIT DESTINATION -->
     <div id="destModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
-            <h3 id="destModalTitle" class="text-lg font-extrabold text-white">Add/Edit Destination</h3>
+        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+            <h3 id="destModalTitle" class="text-lg font-extrabold text-white">Add Destination</h3>
             <input type="hidden" id="editDestId">
             <div class="space-y-3 text-xs">
                 <div>
@@ -172,17 +164,59 @@
                         <input type="text" id="destDistrict" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-slate-400 mb-1 font-semibold">Image URL</label>
-                    <input type="text" id="destImage" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
+
+                <!-- 3 Image Uploads -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <div>
+                        <label class="block text-emerald-400 mb-1 font-bold">Image 1 (Main)</label>
+                        <input type="file" id="destImg1" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
+                    <div>
+                        <label class="block text-emerald-400 mb-1 font-bold">Image 2 (Slider)</label>
+                        <input type="file" id="destImg2" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
+                    <div>
+                        <label class="block text-emerald-400 mb-1 font-bold">Image 3 (Slider)</label>
+                        <input type="file" id="destImg3" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-slate-400 mb-1 font-semibold">Short Description</label>
                     <textarea id="destShortDesc" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
                 </div>
                 <div>
                     <label class="block text-slate-400 mb-1 font-semibold">Full Details</label>
-                    <textarea id="destFullDesc" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
+                    <textarea id="destFullDesc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
+                </div>
+
+                <!-- Nearby Hotels Inputs with Image & Description -->
+                <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                    <h4 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-hotel mr-1"></i> Add Nearby Hotels & Resorts (Name, Type, Price, Image, Description)</h4>
+                    <div id="hotelInputsContainer" class="space-y-3">
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hotel-row">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="text" placeholder="Hotel Name" class="hotel-name bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                <input type="text" placeholder="Type (e.g. 5-Star)" class="hotel-type bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                <input type="text" placeholder="Price (e.g. ৳5,000/night)" class="hotel-price bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="file" accept="image/*" class="hotel-img w-full text-[10px] text-slate-300 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                                <input type="text" placeholder="Hotel Short Description" class="hotel-desc bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hotel-row">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="text" placeholder="Hotel Name 2" class="hotel-name bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                <input type="text" placeholder="Type" class="hotel-type bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                <input type="text" placeholder="Price" class="hotel-price bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="file" accept="image/*" class="hotel-img w-full text-[10px] text-slate-300 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                                <input type="text" placeholder="Hotel Short Description" class="hotel-desc bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
@@ -194,20 +228,37 @@
 
     <!-- MODAL: ADD CULTURAL FESTIVAL -->
     <div id="culturalModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-amber-800/60 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+        <div class="bg-slate-900 border border-amber-800/60 rounded-3xl max-w-lg w-full p-6 relative shadow-2xl space-y-4">
             <h3 class="text-lg font-extrabold text-white">Add Cultural Festival</h3>
             <div class="space-y-3 text-xs">
                 <div>
                     <label class="block text-slate-400 mb-1 font-semibold">Festival Name</label>
                     <input type="text" id="cultName" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
-                <div>
-                    <label class="block text-slate-400 mb-1 font-semibold">Date / Season</label>
-                    <input type="text" id="cultDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. April 14 (Pohela Boishakh)">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-semibold">Date / Season</label>
+                        <input type="text" id="cultDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. April 14">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-semibold">Location</label>
+                        <input type="text" id="cultLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-slate-400 mb-1 font-semibold">Location</label>
-                    <input type="text" id="cultLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
+                <!-- 3 Image Uploads -->
+                <div class="grid grid-cols-3 gap-2 p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <div>
+                        <label class="block text-amber-400 mb-1 font-bold">Image 1</label>
+                        <input type="file" id="cultImg1" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
+                    <div>
+                        <label class="block text-amber-400 mb-1 font-bold">Image 2</label>
+                        <input type="file" id="cultImg2" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
+                    <div>
+                        <label class="block text-amber-400 mb-1 font-bold">Image 3</label>
+                        <input type="file" id="cultImg3" accept="image/*" class="w-full text-[10px] text-slate-300">
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
@@ -234,6 +285,10 @@
                     <label class="block text-slate-400 mb-1 font-semibold">Email / Contact</label>
                     <input type="text" id="boardContact" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white">
                 </div>
+                <div>
+                    <label class="block text-emerald-400 mb-1 font-bold">Member Photo</label>
+                    <input type="file" id="boardImg" accept="image/*" class="w-full text-xs text-slate-300">
+                </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeBoardModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
@@ -245,7 +300,7 @@
     <!-- MODAL: ADD NOTICE -->
     <div id="noticeModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
-            <h3 class="text-lg font-extrabold text-white">Publish Notice</h3>
+            <h3 class="text-lg font-extrabold text-white">Publish Notice with PDF</h3>
             <div class="space-y-3 text-xs">
                 <div>
                     <label class="block text-slate-400 mb-1 font-semibold">Notice Title</label>
@@ -257,12 +312,16 @@
                 </div>
                 <div>
                     <label class="block text-slate-400 mb-1 font-semibold">Date</label>
-                    <input type="text" id="noticeDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. 2026-10-19">
+                    <input type="text" id="noticeDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" placeholder="e.g. 2026-10-26">
+                </div>
+                <div>
+                    <label class="block text-emerald-400 mb-1 font-bold">Upload PDF Document</label>
+                    <input type="file" id="noticePdfFile" accept="application/pdf" class="w-full text-xs text-slate-300">
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeNoticeModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
-                <button onclick="saveNotice()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Publish</button>
+                <button onclick="saveNotice()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Publish Notice</button>
             </div>
         </div>
     </div>
@@ -284,12 +343,19 @@
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
 
-      // Render Admin Tables
+      function fileToBase64(file) {
+          return new Promise((resolve, reject) => {
+              if (!file) { resolve(''); return; }
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = error => reject(error);
+          });
+      }
+
       function renderAdminTables() {
-          // Destinations
           const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-          const destTable = document.getElementById('adminDestinationsTable');
-          destTable.innerHTML = destinations.map(d => `
+          document.getElementById('adminDestinationsTable').innerHTML = destinations.map(d => `
               <tr class="border-b border-slate-800/60 hover:bg-slate-900">
                   <td class="py-3 px-4 font-mono">${d.id}</td>
                   <td class="py-3 px-4 font-bold text-white">${d.name}</td>
@@ -297,16 +363,14 @@
                   <td class="py-3 px-4">${d.district}</td>
                   <td class="py-3 px-4 text-yellow-400 font-mono">${d.hotels ? d.hotels.length : 0} Hotels</td>
                   <td class="py-3 px-4 text-right space-x-2">
-                      <button onclick="editDestination(${d.id})" class="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg transition" title="Edit Destination"><i class="fa-solid fa-pen"></i></button>
-                      <button onclick="deleteDestination(${d.id})" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition" title="Delete Destination"><i class="fa-solid fa-trash"></i></button>
+                      <button onclick="editDestination(${d.id})" class="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg transition"><i class="fa-solid fa-pen"></i></button>
+                      <button onclick="deleteDestination(${d.id})" class="px-2.5 py-1.5 bg-bdRed hover:bg-red-700 text-white rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
                   </td>
               </tr>
           `).join('') || `<tr><td colspan="6" class="text-center py-4 text-slate-500">No destinations found.</td></tr>`;
 
-          // Cultural Festivals
           const cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
-          const cultTable = document.getElementById('adminCulturalTable');
-          cultTable.innerHTML = cultural.map((c, index) => `
+          document.getElementById('adminCulturalTable').innerHTML = cultural.map((c, index) => `
               <tr class="border-b border-slate-800/60 hover:bg-slate-900">
                   <td class="py-3 px-4 font-bold text-white">${c.name}</td>
                   <td class="py-3 px-4 text-amber-400">${c.date}</td>
@@ -317,10 +381,8 @@
               </tr>
           `).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-500">No cultural events added.</td></tr>`;
 
-          // Board Members
           const members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
-          const boardTable = document.getElementById('adminBoardTable');
-          boardTable.innerHTML = members.map((m, index) => `
+          document.getElementById('adminBoardTable').innerHTML = members.map((m, index) => `
               <tr class="border-b border-slate-800/60 hover:bg-slate-900">
                   <td class="py-3 px-4 font-bold text-white">${m.name}</td>
                   <td class="py-3 px-4 text-emerald-400">${m.role}</td>
@@ -331,7 +393,6 @@
               </tr>
           `).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-500">No board members added.</td></tr>`;
 
-          // Notices
           db.collection('notices').get().then(snapshot => {
               let noticeHtml = '';
               snapshot.forEach(doc => {
@@ -351,51 +412,81 @@
           });
       }
 
-      // Modals Control
       function openDestModal() {
           document.getElementById('editDestId').value = '';
           document.getElementById('destModalTitle').textContent = 'Add Destination';
           document.getElementById('destName').value = '';
           document.getElementById('destDistrict').value = '';
-          document.getElementById('destImage').value = '';
           document.getElementById('destShortDesc').value = '';
           document.getElementById('destFullDesc').value = '';
+          document.getElementById('destImg1').value = '';
+          document.getElementById('destImg2').value = '';
+          document.getElementById('destImg3').value = '';
           document.getElementById('destModal').classList.remove('hidden');
       }
       function closeDestModal() { document.getElementById('destModal').classList.add('hidden'); }
 
-      function editDestination(id) {
-          const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-          const dest = destinations.find(d => d.id === id);
-          if(dest) {
-              document.getElementById('editDestId').value = dest.id;
-              document.getElementById('destModalTitle').textContent = 'Edit Destination';
-              document.getElementById('destName').value = dest.name;
-              document.getElementById('destCategory').value = dest.category;
-              document.getElementById('destDistrict').value = dest.district;
-              document.getElementById('destImage').value = dest.image || '';
-              document.getElementById('destShortDesc').value = dest.shortDesc || '';
-              document.getElementById('destFullDesc').value = dest.fullDesc || '';
-              document.getElementById('destModal').classList.remove('hidden');
-          }
-      }
-
-      function saveDestination() {
-          const id = document.getElementById('editDestId').value;
+      async function saveDestination() {
+          const id = document.getElementById('editDestId').value || Date.now();
           const name = document.getElementById('destName').value;
           const category = document.getElementById('destCategory').value;
           const district = document.getElementById('destDistrict').value;
-          const image = document.getElementById('destImage').value;
           const shortDesc = document.getElementById('destShortDesc').value;
           const fullDesc = document.getElementById('destFullDesc').value;
 
+          const f1 = document.getElementById('destImg1').files[0];
+          const f2 = document.getElementById('destImg2').files[0];
+          const f3 = document.getElementById('destImg3').files[0];
+
           let destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-          if(id) {
-              destinations = destinations.map(d => d.id == id ? {...d, name, category, district, image, shortDesc, fullDesc} : d);
+          const existing = destinations.find(d => d.id == id) || {};
+
+          const img1 = await fileToBase64(f1) || existing.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e';
+          const img2 = await fileToBase64(f2) || (existing.images ? existing.images[1] : img1);
+          const img3 = await fileToBase64(f3) || (existing.images ? existing.images[2] : img1);
+
+          // Collect Hotels with Image & Description
+          const hotelRows = document.querySelectorAll('.hotel-row');
+          let hotels = [];
+          for(let row of hotelRows) {
+              const hName = row.querySelector('.hotel-name').value.trim();
+              const hType = row.querySelector('.hotel-type').value.trim();
+              const hPrice = row.querySelector('.hotel-price').value.trim();
+              const hDesc = row.querySelector('.hotel-desc').value.trim();
+              const hFile = row.querySelector('.hotel-img').files[0];
+              const hImgBase64 = await fileToBase64(hFile) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945';
+              
+              if(hName) {
+                  hotels.push({ 
+                      name: hName, 
+                      type: hType || 'Standard', 
+                      price: hPrice || 'Contact for price', 
+                      image: hImgBase64, 
+                      description: hDesc || 'Comfortable stay option.' 
+                  });
+              }
+          }
+          if(hotels.length === 0 && existing.hotels) hotels = existing.hotels;
+
+          const newDest = {
+              id: Number(id),
+              name,
+              category,
+              district,
+              image: img1,
+              images: [img1, img2, img3],
+              shortDesc,
+              fullDesc,
+              hotels
+          };
+
+          const index = destinations.findIndex(d => d.id == id);
+          if (index >= 0) {
+              destinations[index] = newDest;
           } else {
-              const newDest = { id: Date.now(), name, category, district, image, shortDesc, fullDesc, hotels: [] };
               destinations.push(newDest);
           }
+
           localStorage.setItem('btb_destinations', JSON.stringify(destinations));
           closeDestModal();
           renderAdminTables();
@@ -408,15 +499,24 @@
           renderAdminTables();
       }
 
-      // Cultural Modals
       function openCulturalModal() { document.getElementById('culturalModal').classList.remove('hidden'); }
       function closeCulturalModal() { document.getElementById('culturalModal').classList.add('hidden'); }
-      function saveCultural() {
+
+      async function saveCultural() {
           const name = document.getElementById('cultName').value;
           const date = document.getElementById('cultDate').value;
           const location = document.getElementById('cultLocation').value;
+
+          const f1 = document.getElementById('cultImg1').files[0];
+          const f2 = document.getElementById('cultImg2').files[0];
+          const f3 = document.getElementById('cultImg3').files[0];
+
+          const img1 = await fileToBase64(f1);
+          const img2 = await fileToBase64(f2);
+          const img3 = await fileToBase64(f3);
+
           let cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
-          cultural.push({ name, date, location });
+          cultural.push({ name, date, location, images: [img1, img2, img3] });
           localStorage.setItem('btb_cultural', JSON.stringify(cultural));
           closeCulturalModal();
           renderAdminTables();
@@ -428,15 +528,18 @@
           renderAdminTables();
       }
 
-      // Board Modals
       function openBoardModal() { document.getElementById('boardModal').classList.remove('hidden'); }
       function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
-      function saveBoard() {
+
+      async function saveBoard() {
           const name = document.getElementById('boardName').value;
           const role = document.getElementById('boardRole').value;
           const contact = document.getElementById('boardContact').value;
+          const f1 = document.getElementById('boardImg').files[0];
+          const image = await fileToBase64(f1);
+
           let members = JSON.parse(localStorage.getItem('btb_board_members')) || [];
-          members.push({ name, role, contact });
+          members.push({ name, role, contact, image });
           localStorage.setItem('btb_board_members', JSON.stringify(members));
           closeBoardModal();
           renderAdminTables();
@@ -448,14 +551,17 @@
           renderAdminTables();
       }
 
-      // Notice Modals
       function openNoticeModal() { document.getElementById('noticeModal').classList.remove('hidden'); }
       function closeNoticeModal() { document.getElementById('noticeModal').classList.add('hidden'); }
-      function saveNotice() {
+
+      async function saveNotice() {
           const title = document.getElementById('noticeTitle').value;
           const category = document.getElementById('noticeCategory').value;
           const date = document.getElementById('noticeDate').value;
-          db.collection('notices').add({ title, category, date }).then(() => {
+          const pdfFile = document.getElementById('noticePdfFile').files[0];
+          const pdfUrl = await fileToBase64(pdfFile);
+
+          db.collection('notices').add({ title, category, date, pdfUrl }).then(() => {
               closeNoticeModal();
               renderAdminTables();
           });

@@ -91,17 +91,55 @@ function loadLiveNotices() {
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-950 p-3 rounded-xl border border-slate-800 gap-2">
                     <div>
                         <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase border border-emerald-800/40 mr-2">${n.category || 'General'}</span>
-                        <span class="text-xs font-bold text-white">${n.title}</span>
+                        <span class="text-xs font-bold text-white cursor-pointer hover:text-emerald-400 transition" onclick="openPdfModal('${n.pdfUrl}', '${n.title}')">${n.title}</span>
                     </div>
                     <div class="flex items-center gap-3 text-[11px] text-slate-400">
                         <span><i class="fa-solid fa-calendar mr-1"></i> ${n.date || ''}</span>
-                        ${n.pdfUrl ? `<button onclick="openPdfModal('${n.pdfUrl}', '${n.title}')" class="px-2.5 py-1 bg-bdRed hover:bg-red-700 text-white rounded-lg font-bold transition">View PDF</button>` : ''}
+                        ${n.pdfUrl ? `
+                            <button onclick="openPdfModal('${n.pdfUrl}', '${n.title}')" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg font-bold transition flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-file-pdf"></i> View Notice
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
             `;
         });
         container.innerHTML = html;
     });
+}
+// PDF Modal with Top Download Icon Button
+function openPdfModal(url, title) {
+    const modal = document.getElementById('pdfModal');
+    const titleEl = document.getElementById('pdfModalTitle');
+    const frame = document.getElementById('pdfFrame');
+    const downloadBtnContainer = document.getElementById('pdfDownloadBtnContainer') || createPdfDownloadHeader();
+
+    if(titleEl) titleEl.textContent = title;
+    if(frame) frame.src = url;
+    if(downloadBtnContainer) {
+        downloadBtnContainer.innerHTML = `
+            <a href="${url}" download="${title}.pdf" class="px-3.5 py-1.5 bg-bdRed hover:bg-red-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition shadow" title="Download PDF">
+                <i class="fa-solid fa-download"></i> Download PDF
+            </a>
+        `;
+    }
+    if(modal) modal.classList.remove('hidden');
+}
+
+function createPdfDownloadHeader() {
+    const pdfModalHeader = document.querySelector('#pdfModal > div');
+    if(!pdfModalHeader) return null;
+    const container = document.createElement('div');
+    container.id = 'pdfDownloadBtnContainer';
+    pdfModalHeader.insertBefore(container, pdfModalHeader.querySelector('iframe') || pdfModalHeader.children[1]);
+    return container;
+}
+
+function closePdfModal() {
+    const modal = document.getElementById('pdfModal');
+    const frame = document.getElementById('pdfFrame');
+    if(modal) modal.classList.add('hidden');
+    if(frame) frame.src = '';
 }
 
 // Global variable for destination image slider intervals (3.5s auto change)
