@@ -190,42 +190,18 @@
                     <textarea id="destFullDesc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white"></textarea>
                 </div>
 
-                <!-- Nearby Hotels Inputs with Image & Description -->
+                <!-- Nearby Hotels Dynamic Inputs -->
                 <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
-                    <h4 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-hotel mr-1"></i> Add Nearby Hotels & Resorts (Name, Type, Price, Image, Description)</h4>
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-hotel mr-1"></i> Add Nearby Hotels & Resorts</h4>
+                        <button type="button" onclick="addHotelInputField()" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition flex items-center gap-1 shadow">
+                            <i class="fa-solid fa-plus"></i> Add Another Hotel
+                        </button>
+                    </div>
                     <div id="hotelInputsContainer" class="space-y-3">
-                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hotel-row">
-                            <div class="grid grid-cols-3 gap-2">
-                                <input type="text" placeholder="Hotel Name" class="hotel-name bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                                <input type="text" placeholder="Type (e.g. 5-Star)" class="hotel-type bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                                <input type="text" placeholder="Price (e.g. ৳5,000/night)" class="hotel-price bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="file" accept="image/*" class="hotel-img w-full text-[10px] text-slate-300 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
-                                <input type="text" placeholder="Hotel Short Description" class="hotel-desc bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                            </div>
-                        </div>
-                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hotel-row">
-                            <div class="grid grid-cols-3 gap-2">
-                                <input type="text" placeholder="Hotel Name 2" class="hotel-name bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                                <input type="text" placeholder="Type" class="hotel-type bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                                <input type="text" placeholder="Price" class="hotel-price bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="file" accept="image/*" class="hotel-img w-full text-[10px] text-slate-300 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
-                                <input type="text" placeholder="Hotel Short Description" class="hotel-desc bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-                            </div>
-                        </div>
+                        <!-- Dynamic hotel fields will append here -->
                     </div>
                 </div>
-            </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeDestModal()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs">Cancel</button>
-                <button onclick="saveDestination()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">Save Destination</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL: ADD CULTURAL FESTIVAL -->
     <div id="culturalModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-800/60 rounded-3xl max-w-lg w-full p-6 relative shadow-2xl space-y-4">
@@ -412,6 +388,33 @@
           });
       }
 
+      // Dynamic Hotel Field Adder
+      function addHotelInputField(existingData = null) {
+          const container = document.getElementById('hotelInputsContainer');
+          const div = document.createElement('div');
+          div.className = "p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hotel-row relative";
+          
+          div.innerHTML = `
+              <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-bdRed hover:text-red-500 text-xs font-bold px-1.5 py-0.5 rounded" title="Remove Hotel"><i class="fa-solid fa-trash"></i></button>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2">
+                  <input type="text" placeholder="Hotel Name" value="${existingData ? existingData.name : ''}" class="hotel-name bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs">
+                  <input type="text" placeholder="Type (e.g. 5-Star)" value="${existingData ? existingData.type : ''}" class="hotel-type bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs">
+                  <input type="text" placeholder="Price (e.g. ৳5,000/night)" value="${existingData ? existingData.price : ''}" class="hotel-price bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs">
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div>
+                      <label class="block text-[10px] text-slate-400 mb-0.5">Hotel Image</label>
+                      <input type="file" accept="image/*" class="hotel-img w-full text-[10px] text-slate-300 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                  </div>
+                  <div>
+                      <label class="block text-[10px] text-slate-400 mb-0.5">Hotel Short Description</label>
+                      <input type="text" placeholder="Short description" value="${existingData ? existingData.description : ''}" class="hotel-desc bg-slate-950 border border-slate-800 rounded-lg p-2 text-white text-xs">
+                  </div>
+              </div>
+          `;
+          container.appendChild(div);
+      }
+
       function openDestModal() {
           document.getElementById('editDestId').value = '';
           document.getElementById('destModalTitle').textContent = 'Add Destination';
@@ -422,9 +425,37 @@
           document.getElementById('destImg1').value = '';
           document.getElementById('destImg2').value = '';
           document.getElementById('destImg3').value = '';
+          
+          document.getElementById('hotelInputsContainer').innerHTML = '';
+          addHotelInputField(); // Default one row
+          
           document.getElementById('destModal').classList.remove('hidden');
       }
       function closeDestModal() { document.getElementById('destModal').classList.add('hidden'); }
+
+      function editDestination(id) {
+          const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+          const dest = destinations.find(d => d.id === id);
+          if(dest) {
+              document.getElementById('editDestId').value = dest.id;
+              document.getElementById('destModalTitle').textContent = 'Edit Destination';
+              document.getElementById('destName').value = dest.name;
+              document.getElementById('destCategory').value = dest.category;
+              document.getElementById('destDistrict').value = dest.district;
+              document.getElementById('destShortDesc').value = dest.shortDesc || '';
+              document.getElementById('destFullDesc').value = dest.fullDesc || '';
+              
+              const container = document.getElementById('hotelInputsContainer');
+              container.innerHTML = '';
+              if(dest.hotels && dest.hotels.length > 0) {
+                  dest.hotels.forEach(h => addHotelInputField(h));
+              } else {
+                  addHotelInputField();
+              }
+
+              document.getElementById('destModal').classList.remove('hidden');
+          }
+      }
 
       async function saveDestination() {
           const id = document.getElementById('editDestId').value || Date.now();
@@ -445,7 +476,7 @@
           const img2 = await fileToBase64(f2) || (existing.images ? existing.images[1] : img1);
           const img3 = await fileToBase64(f3) || (existing.images ? existing.images[2] : img1);
 
-          // Collect Hotels with Image & Description
+          // Collect Hotels with Image & Description dynamically
           const hotelRows = document.querySelectorAll('.hotel-row');
           let hotels = [];
           for(let row of hotelRows) {
