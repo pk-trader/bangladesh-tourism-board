@@ -6,75 +6,175 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initApp() {
     loadLiveNotices();
+    setupDefaultData();
     renderDestinations('all');
-    setupDefaultDestinations();
+    renderCultureSection('all');
+    renderFoodSection();
 }
 
-// Default Destinations initialization if localStorage is empty
-function setupDefaultDestinations() {
+// Default Data initialization if localStorage is empty
+function setupDefaultData() {
     if (!localStorage.getItem('btb_destinations')) {
         const defaultDests = [
-            {
-                id: 1,
-                name: "Cox's Bazar Sea Beach",
-                category: "beaches",
-                district: "Cox's Bazar",
-                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-                images: [
-                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-                    "https://images.unsplash.com/photo-1544644181-1484b3fdfc62",
-                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-                ],
-                shortDesc: "World's longest natural unbroken sandy sea beach, famous for stunning golden sunsets.",
-                fullDesc: "Cox's Bazar is the tourist capital of Bangladesh. Stretching over 120 kilometers, the unbroken sandy beach attracts millions of tourists every year.",
-                hotels: [
-                    { name: "Sayeman Beach Resort", type: "5-Star Luxury", price: "৳15,000/night" },
-                    { name: "Hotel Sea Crown", type: "Beach-facing", price: "৳6,000/night" },
-                    { name: "Long Beach Hotel", type: "Premium", price: "৳8,500/night" }
-                ]
-            },
-            {
-                id: 2,
-                name: "Sajek Valley",
-                category: "hills",
-                district: "Rangamati",
-                image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62",
-                images: [
-                    "https://images.unsplash.com/photo-1544644181-1484b3fdfc62",
-                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-                ],
-                shortDesc: "Kingdom of Clouds in the hill tracts, offering breathtaking views of floating clouds.",
-                fullDesc: "Situated in Baghaichhari upazila of Rangamati district, Sajek Valley is famously known as the Queen of Hills at nearly 1,800 feet height.",
-                hotels: [
-                    { name: "Sajek Resort", type: "Army Managed", price: "৳5,000/night" },
-                    { name: "Meghpunji Resort", type: "Eco-cottage", price: "৳4,500/night" }
-                ]
-            },
-            {
-                id: 3,
-                name: "The Sundarbans",
-                category: "forests",
-                district: "Bagerhat",
-                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-                images: [
-                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-                    "https://images.unsplash.com/photo-1544644181-1484b3fdfc62"
-                ],
-                shortDesc: "Largest mangrove forest in the world and natural habitat of the Royal Bengal Tiger.",
-                fullDesc: "A UNESCO World Heritage Site featuring unique tidal halophytic mangrove forests, spotted deer, and boat safaris.",
-                hotels: [
-                    { name: "Sundarbans Jungle Resort", type: "Eco Lodge", price: "৳4,000/night" },
-                    { name: "Mongla Tourist Lodge", type: "BPC Lodge", price: "৳3,000/night" }
-                ]
-            }
+            { id: 1, name: "Cox's Bazar Sea Beach", category: "beaches", district: "Cox's Bazar", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e", images: ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e", "https://images.unsplash.com/photo-1544644181-1484b3fdfc62", "https://images.unsplash.com/photo-1506744038136-46273834b3fb"], shortDesc: "World's longest natural unbroken sandy sea beach.", fullDesc: "Cox's Bazar is the tourist capital of Bangladesh stretching over 120 km.", hotels: [{ name: "Sayeman Beach", type: "5-Star", rating: "⭐ 4.9/5", description: "Luxury beach resort", link: "#" }] },
+            { id: 2, name: "Sajek Valley", category: "hills", district: "Rangamati", image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62", images: ["https://images.unsplash.com/photo-1544644181-1484b3fdfc62", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e", "https://images.unsplash.com/photo-1506744038136-46273834b3fb"], shortDesc: "Kingdom of clouds in hill tracts.", fullDesc: "Sajek Valley is known as Queen of Hills at 1800 feet height.", hotels: [{ name: "Sajek Resort", type: "Eco", rating: "⭐ 4.6/5", description: "Scenic mountain view", link: "#" }] },
+            { id: 3, name: "The Sundarbans", category: "forests", district: "Bagerhat", image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb", images: ["https://images.unsplash.com/photo-1506744038136-46273834b3fb", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e", "https://images.unsplash.com/photo-1544644181-1484b3fdfc62"], shortDesc: "Largest mangrove forest and Royal Bengal Tiger habitat.", fullDesc: "UNESCO World Heritage Site featuring tidal halophytic mangrove forests.", hotels: [{ name: "Jungle Resort", type: "Lodge", rating: "⭐ 4.4/5", description: "Deep forest stay", link: "#" }] }
         ];
         localStorage.setItem('btb_destinations', JSON.stringify(defaultDests));
     }
+
+    if (!localStorage.getItem('btb_cultural')) {
+        const defaultCultural = [
+            { name: "Pohela Boishakh Festival", type: "cultural", date: "April 14", location: "Dhaka", description: "The grand celebration of Bengali New Year with processions and concert.", images: ["https://images.unsplash.com/photo-1533105079780-92b9be482077", "", ""] },
+            { name: "Dhaka International Trade Fair", type: "fair", date: "January", location: "Purbachal, Dhaka", description: "Mega industrial and commercial trade exposition showcasing Bangladeshi products.", images: ["https://images.unsplash.com/photo-1511578314322-379afb476865", "", ""] }
+        ];
+        localStorage.setItem('btb_cultural', JSON.stringify(defaultCultural));
+    }
+
+    if (!localStorage.getItem('btb_foods')) {
+        const defaultFoods = [
+            { name: "Kacchi Biryani", region: "Old Dhaka", description: "Aromatic basmati rice layered with tender mutton and rich spices.", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8" },
+            { name: "Hilsa Fish Curry (Ilish Bhuna)", region: "Coastal Region", description: "National fish of Bangladesh cooked in spicy mustard gravy.", image: "https://images.unsplash.com/photo-1544025162-d76694265947" },
+            { name: "Pitha Puli (Traditional Cakes)", region: "Rural Bengal", description: "Winter seasonal rice-flour sweets prepared across villages.", image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc" }
+        ];
+        localStorage.setItem('btb_foods', JSON.stringify(defaultFoods));
+    }
 }
 
-// Live Notices from Firebase Firestore
+// Pagination state for Destinations
+let destDisplayCount = 9;
+
+function renderDestinations(category = 'all') {
+    const grid = document.getElementById('destinationsGrid');
+    const seeMoreContainer = document.getElementById('destSeeMoreContainer');
+    if (!grid) return;
+
+    const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
+    const filtered = category === 'all' ? destinations : destinations.filter(d => d.category === category);
+    const sliced = filtered.slice(0, destDisplayCount);
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No destinations found in this category.</p>`;
+        if(seeMoreContainer) seeMoreContainer.innerHTML = '';
+        return;
+    }
+
+    grid.innerHTML = sliced.map(d => {
+        const images = (d.images && d.images.length >= 3 && d.images[0]) ? d.images : [d.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'];
+        return `
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-emerald-500/50 transition group cursor-pointer" onclick="openDestModalById(${d.id})">
+            <div class="h-48 overflow-hidden relative">
+                <img src="${images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${d.name}">
+                <span class="absolute top-3 left-3 px-2.5 py-1 bg-emerald-950/85 backdrop-blur-md text-emerald-300 text-[10px] font-bold rounded-lg uppercase border border-emerald-800/40">${d.category}</span>
+            </div>
+            <div class="p-5 space-y-2">
+                <div class="flex justify-between items-center text-xs text-slate-400">
+                    <span><i class="fa-solid fa-location-dot text-bdRed mr-1"></i> ${d.district}</span>
+                    <span class="text-yellow-400 font-bold font-mono">${d.hotels ? d.hotels.length : 0} Hotels</span>
+                </div>
+                <h3 class="text-lg font-bold text-white">${d.name}</h3>
+                <p class="text-xs text-slate-300 line-clamp-2">${d.shortDesc || ''}</p>
+                <div class="pt-2 flex items-center justify-between text-xs font-bold text-emerald-400">
+                    <span>Explore Details & Hotels</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+
+    // See More Button control
+    if (seeMoreContainer) {
+        if (destDisplayCount < filtered.length) {
+            seeMoreContainer.innerHTML = `
+                <button onclick="loadMoreDestinations()" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg transition">
+                    See More Destinations <i class="fa-solid fa-arrow-down ml-1"></i>
+                </button>
+            `;
+        } else {
+            seeMoreContainer.innerHTML = '';
+        }
+    }
+}
+
+function loadMoreDestinations() {
+    destDisplayCount += 9;
+    renderDestinations('all');
+}
+
+function filterDestinations(category) {
+    destDisplayCount = 9;
+    renderDestinations(category);
+}
+
+// Cultural Programs & Fairs Section
+function renderCultureSection(type = 'all') {
+    const grid = document.getElementById('culturalGrid');
+    if (!grid) return;
+
+    const cultural = JSON.parse(localStorage.getItem('btb_cultural')) || [];
+    const filtered = type === 'all' ? cultural : cultural.filter(c => c.type === type);
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No events found in this category.</p>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(c => `
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg p-5 space-y-3">
+            <div class="h-44 rounded-xl overflow-hidden">
+                <img src="${c.images && c.images[0] ? c.images[0] : 'https://images.unsplash.com/photo-1533105079780-92b9be482077'}" class="w-full h-full object-cover" alt="${c.name}">
+            </div>
+            <div class="space-y-1">
+                <span class="text-[10px] bg-amber-950 text-amber-400 px-2 py-0.5 rounded font-bold uppercase border border-amber-800/40">${c.type || 'Festival'}</span>
+                <h3 class="text-base font-bold text-white mt-1">${c.name}</h3>
+                <p class="text-xs text-slate-300">${c.description || ''}</p>
+                <div class="flex justify-between items-center text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+                    <span><i class="fa-solid fa-calendar text-amber-400 mr-1"></i> ${c.date}</span>
+                    <span><i class="fa-solid fa-location-dot text-bdRed mr-1"></i> ${c.location}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterCulture(type) {
+    renderCultureSection(type);
+    document.querySelectorAll('.culture-btn').forEach(btn => {
+        if(btn.getAttribute('data-type') === type) {
+            btn.className = "px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl transition shadow-md culture-btn";
+        } else {
+            btn.className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition culture-btn";
+        }
+    });
+}
+
+// Traditional Foods Section
+function renderFoodSection() {
+    const grid = document.getElementById('foodsGrid');
+    if (!grid) return;
+
+    const foods = JSON.parse(localStorage.getItem('btb_foods')) || [];
+    if (foods.length === 0) {
+        grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No food items added yet.</p>`;
+        return;
+    }
+
+    grid.innerHTML = foods.map(f => `
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg p-5 space-y-3">
+            <div class="h-44 rounded-xl overflow-hidden">
+                <img src="${f.image}" class="w-full h-full object-cover" alt="${f.name}">
+            </div>
+            <div class="space-y-1">
+                <span class="text-[10px] bg-red-950 text-red-400 px-2 py-0.5 rounded font-bold uppercase border border-red-800/40">${f.region}</span>
+                <h3 class="text-lg font-bold text-white mt-1">${f.name}</h3>
+                <p class="text-xs text-slate-300">${f.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Live Notices from Firebase
 function loadLiveNotices() {
     const container = document.getElementById('noticeListContainer');
     if (!container) return;
@@ -95,11 +195,7 @@ function loadLiveNotices() {
                     </div>
                     <div class="flex items-center gap-3 text-[11px] text-slate-400">
                         <span><i class="fa-solid fa-calendar mr-1"></i> ${n.date || ''}</span>
-                        ${n.pdfUrl ? `
-                            <button onclick="openPdfModal('${n.pdfUrl}', '${n.title}')" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg font-bold transition flex items-center gap-1.5 shadow">
-                                <i class="fa-solid fa-file-pdf"></i> View Notice
-                            </button>
-                        ` : ''}
+                        ${n.pdfUrl ? `<button onclick="openPdfModal('${n.pdfUrl}', '${n.title}')" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg font-bold transition flex items-center gap-1.5 shadow"><i class="fa-solid fa-file-pdf"></i> View Notice</button>` : ''}
                     </div>
                 </div>
             `;
@@ -107,134 +203,18 @@ function loadLiveNotices() {
         container.innerHTML = html;
     });
 }
-// PDF Modal with Top Download Icon Button
+
 function openPdfModal(url, title) {
-    const modal = document.getElementById('pdfModal');
-    const titleEl = document.getElementById('pdfModalTitle');
-    const frame = document.getElementById('pdfFrame');
-    const downloadBtnContainer = document.getElementById('pdfDownloadBtnContainer') || createPdfDownloadHeader();
-
-    if(titleEl) titleEl.textContent = title;
-    if(frame) frame.src = url;
-    if(downloadBtnContainer) {
-        downloadBtnContainer.innerHTML = `
-            <a href="${url}" download="${title}.pdf" class="px-3.5 py-1.5 bg-bdRed hover:bg-red-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition shadow" title="Download PDF">
-                <i class="fa-solid fa-download"></i> Download PDF
-            </a>
-        `;
-    }
-    if(modal) modal.classList.remove('hidden');
+    document.getElementById('pdfModalTitle').textContent = title;
+    document.getElementById('pdfFrame').src = url;
+    document.getElementById('pdfModal').classList.remove('hidden');
 }
-
-function createPdfDownloadHeader() {
-    const pdfModalHeader = document.querySelector('#pdfModal > div');
-    if(!pdfModalHeader) return null;
-    const container = document.createElement('div');
-    container.id = 'pdfDownloadBtnContainer';
-    pdfModalHeader.insertBefore(container, pdfModalHeader.querySelector('iframe') || pdfModalHeader.children[1]);
-    return container;
-}
-
 function closePdfModal() {
-    const modal = document.getElementById('pdfModal');
-    const frame = document.getElementById('pdfFrame');
-    if(modal) modal.classList.add('hidden');
-    if(frame) frame.src = '';
+    document.getElementById('pdfModal').classList.add('hidden');
+    document.getElementById('pdfFrame').src = '';
 }
 
-// Global variable for destination image slider intervals (3.5s auto change)
-let destSliderIntervals = {};
-
-function renderDestinations(category = 'all') {
-    const grid = document.getElementById('destinationsGrid');
-    if (!grid) return;
-    
-    Object.values(destSliderIntervals).forEach(clearInterval);
-    destSliderIntervals = {};
-
-    const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-    const filtered = category === 'all' ? destinations : destinations.filter(d => d.category === category);
-
-    if (filtered.length === 0) {
-        grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No destinations found in this category.</p>`;
-    } else {
-        grid.innerHTML = filtered.map(d => {
-            const images = (d.images && d.images.length >= 3) ? d.images : [
-                d.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-                'https://images.unsplash.com/photo-1544644181-1484b3fdfc62',
-                'https://images.unsplash.com/photo-1506744038136-46273834b3fb'
-            ];
-
-            return `
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-emerald-500/50 transition group">
-                <!-- 3-Image Auto Slider Container (3.5s interval) -->
-                <div class="h-48 overflow-hidden relative cursor-pointer" onclick="openDestModalById(${d.id})">
-                    <div id="dest-slider-${d.id}" class="w-full h-full relative">
-                        ${images.map((imgUrl, idx) => `
-                            <img src="${imgUrl}" class="dest-slide-img-${d.id} absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === 0 ? 'opacity-100' : 'opacity-0'}" alt="${d.name}">
-                        `).join('')}
-                    </div>
-                    <span class="absolute top-3 left-3 px-2.5 py-1 bg-emerald-950/85 backdrop-blur-md text-emerald-300 text-[10px] font-bold rounded-lg uppercase border border-emerald-800/40 z-10">${d.category}</span>
-                    
-                    <div class="absolute bottom-2 right-3 z-10 flex gap-1">
-                        <span class="dot-${d.id} w-1.5 h-1.5 rounded-full bg-white opacity-100 transition-all"></span>
-                        <span class="dot-${d.id} w-1.5 h-1.5 rounded-full bg-white opacity-40 transition-all"></span>
-                        <span class="dot-${d.id} w-1.5 h-1.5 rounded-full bg-white opacity-40 transition-all"></span>
-                    </div>
-                </div>
-
-                <div class="p-5 space-y-2 cursor-pointer" onclick="openDestModalById(${d.id})">
-                    <div class="flex justify-between items-center text-xs text-slate-400">
-                        <span><i class="fa-solid fa-location-dot text-bdRed mr-1"></i> ${d.district}</span>
-                        <span class="text-yellow-400 font-bold font-mono">${d.hotels ? d.hotels.length : 0} Hotels</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-white">${d.name}</h3>
-                    <p class="text-xs text-slate-300 line-clamp-2">${d.shortDesc || ''}</p>
-                    <div class="pt-2 flex items-center justify-between text-xs font-bold text-emerald-400">
-                        <span>Explore Details & Hotels</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
-                    </div>
-                </div>
-            </div>
-            `;
-        }).join('');
-
-        // 3.5 Second Auto Slider Timer
-        filtered.forEach(d => {
-            let currentImgIndex = 0;
-            destSliderIntervals[d.id] = setInterval(() => {
-                const imgElements = document.querySelectorAll(`.dest-slide-img-${d.id}`);
-                const dotElements = document.querySelectorAll(`.dot-${d.id}`);
-                
-                if (imgElements.length > 0) {
-                    imgElements[currentImgIndex].classList.remove('opacity-100');
-                    imgElements[currentImgIndex].classList.add('opacity-0');
-                    if (dotElements[currentImgIndex]) dotElements[currentImgIndex].classList.replace('opacity-100', 'opacity-40');
-
-                    currentImgIndex = (currentImgIndex + 1) % imgElements.length;
-
-                    imgElements[currentImgIndex].classList.remove('opacity-0');
-                    imgElements[currentImgIndex].classList.add('opacity-100');
-                    if (dotElements[currentImgIndex]) dotElements[currentImgIndex].classList.replace('opacity-40', 'opacity-100');
-                }
-            }, 3500);
-        });
-    }
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        if(btn.getAttribute('data-category') === category) {
-            btn.className = "px-4 py-2 bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-md filter-btn";
-        } else {
-            btn.className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition filter-btn";
-        }
-    });
-}
-
-function filterDestinations(category) {
-    renderDestinations(category);
-}
-
-// Destination Details Modal
+// Destination Modal Details
 function openDestModalById(id) {
     const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
     const d = destinations.find(item => item.id === id);
@@ -263,10 +243,16 @@ function openDestModalById(id) {
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     ${d.hotels && d.hotels.length > 0 ? d.hotels.map(h => `
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
-                            <div class="font-bold text-white text-xs">${h.name}</div>
-                            <div class="text-[11px] text-emerald-400">${h.type || 'Standard'}</div>
-                            <div class="text-[11px] text-yellow-400 font-mono">${h.price || 'Contact for price'}</div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-bold text-white text-xs">${h.name}</div>
+                                    <div class="text-[11px] text-emerald-400">${h.type || 'Standard'}</div>
+                                </div>
+                                <span class="text-yellow-400 font-bold text-xs font-mono bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800">${h.rating || '⭐ 4.5/5'}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400">${h.description || ''}</p>
+                            ${h.link ? `<a href="${h.link}" target="_blank" class="block w-full py-1.5 bg-bdRed hover:bg-red-700 text-white text-center text-[11px] font-bold rounded-lg transition shadow"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Book Now</a>` : ''}
                         </div>
                     `).join('') : '<p class="text-xs text-slate-500">No hotels added yet.</p>'}
                 </div>
@@ -281,54 +267,31 @@ function openDestModalById(id) {
             </a>
         `;
     }
-
     document.getElementById('detailsModal').classList.remove('hidden');
 }
+function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
-function closeDetailsModal() {
-    document.getElementById('detailsModal').classList.add('hidden');
-}
-
-// Board Members Modal
+// Official Tourism Board Video Gallery Style Board Members Modal
 function openBoardModal() {
     const grid = document.getElementById('boardMembersGrid');
     if (!grid) return;
     const members = JSON.parse(localStorage.getItem('btb_board_members')) || [
-        { name: "Chairman, BTB", role: "Chief Executive Officer", contact: "chairman@tourism.gov.bd" },
-        { name: "Director (Planning)", role: "Head of Planning & Development", contact: "planning@tourism.gov.bd" }
+        { name: "Chairman, BTB", role: "Chief Executive Officer", contact: "chairman@tourism.gov.bd", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" },
+        { name: "Director (Planning)", role: "Head of Planning", contact: "planning@tourism.gov.bd", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e" }
     ];
 
     grid.innerHTML = members.map(m => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-            <div class="text-sm font-bold text-white">${m.name}</div>
-            <div class="text-xs text-emerald-400 font-semibold">${m.role}</div>
-            <div class="text-xs text-slate-400"><i class="fa-solid fa-envelope mr-1 text-bdRed"></i> ${m.contact}</div>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-4">
+            <img src="${m.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500/50" alt="${m.name}">
+            <div class="space-y-1">
+                <div class="text-sm font-bold text-white">${m.name}</div>
+                <div class="text-xs text-emerald-400 font-semibold">${m.role}</div>
+                <div class="text-xs text-slate-400"><i class="fa-solid fa-envelope mr-1 text-bdRed"></i> ${m.contact}</div>
+            </div>
         </div>
     `).join('');
 
     document.getElementById('boardModal').classList.remove('hidden');
 }
-
-function closeBoardModal() {
-    document.getElementById('boardModal').classList.add('hidden');
-}
-
-// PDF Modal
-function openPdfModal(url, title) {
-    document.getElementById('pdfModalTitle').textContent = title;
-    document.getElementById('pdfFrame').src = url;
-    document.getElementById('pdfModal').classList.remove('hidden');
-}
-
-function closePdfModal() {
-    document.getElementById('pdfModal').classList.add('hidden');
-    document.getElementById('pdfFrame').src = '';
-}
-
-// Mobile Menu Toggle
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobileMenu');
-    if (menu) {
-        menu.classList.toggle('hidden');
-    }
-}
+function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
+function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }

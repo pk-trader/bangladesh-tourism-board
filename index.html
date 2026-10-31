@@ -18,37 +18,15 @@
         }
     </script>
     <style>
-        /* Force Hide ALL Google Default Banners, Popups, and Icons */
-        .goog-te-banner-frame, 
-        .goog-te-banner-frame.skiptranslate, 
-        iframe.goog-te-banner-frame, 
-        #goog-gt-tt, 
-        .goog-te-balloon-frame,
-        .goog-te-gadget,
-        .goog-te-gadget-simple,
-        .skiptranslate {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            height: 0 !important;
-            width: 0 !important;
-            position: absolute !important;
-            top: -9999px !important;
+        .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .goog-te-gadget, .goog-te-gadget-simple, .skiptranslate {
+            display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; width: 0 !important; position: absolute !important; top: -9999px !important;
         }
-        body {
-            top: 0px !important;
-            position: static !important;
-        }
-        .goog-tooltip, .goog-text-highlight {
-            display: none !important;
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
+        body { top: 0px !important; position: static !important; }
+        .goog-tooltip, .goog-text-highlight { display: none !important; background-color: transparent !important; box-shadow: none !important; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased">
 
-    <!-- Hidden Default Google Element Container -->
     <div id="google_translate_element" style="display:none !important;"></div>
 
     <!-- Top Alert Bar -->
@@ -80,71 +58,57 @@
             <div class="hidden lg:flex items-center gap-5 text-xs font-semibold">
                 <a href="#home" class="hover:text-emerald-400 transition">Home</a>
                 <a href="#destinations" class="hover:text-emerald-400 transition">Destinations</a>
+                <a href="#cultural-section" class="hover:text-emerald-400 transition">Cultural Fairs</a>
+                <a href="#foods-section" class="hover:text-emerald-400 transition">Traditional Foods</a>
                 <a href="https://www.visa.gov.bd/" target="_blank" class="text-slate-300 hover:text-emerald-400 font-medium transition">Visa & Travel</a>
-                <a href="#cultural-programs" class="hover:text-emerald-400 transition">Cultural Fairs</a>
                 <a href="#live-gps" class="text-bdRed hover:underline">Live GPS 📍</a>
-                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Board Members</button>
+                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Video Gallery & Board</button>
             </div>
 
-            <!-- Custom Professional Language Selector Dropdown -->
+            <!-- Language Dropdown -->
             <div class="flex items-center gap-2 relative">
                 <div class="relative">
                     <select id="customLanguageSelect" onchange="triggerGoogleTranslate(this.value)" class="bg-slate-950 text-emerald-400 border border-emerald-800/80 rounded-xl px-3 py-1.5 text-xs font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-lg appearance-none pr-7">
-                        <option value="en">🗣️ Language: English</option>
-                        <option value="bn">🗣️ Language: বাংলা</option>
-                        <option value="ar">🗣️ Language: العربية</option>
-                        <option value="fr">🗣️ Language: Français</option>
-                        <option value="es">🗣️ Language: Español</option>
-                        <option value="de">🗣️ Language: Deutsch</option>
-                        <option value="hi">🗣️ Language: हिन्दी</option>
-                        <option value="zh-CN">🗣️ Language: 中文</option>
-                        <option value="ja">🗣️ Language: 日本語</option>
+                        <option value="en">🗣️ English</option>
+                        <option value="bn">🗣️ বাংলা</option>
+                        <option value="ar">🗣️ العربية</option>
+                        <option value="fr">🗣️ Français</option>
+                        <option value="es">🗣️ Español</option>
+                        <option value="hi">🗣️ हिन्दी</option>
                     </select>
                     <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-emerald-400 text-[10px] pointer-events-none"></i>
                 </div>
-
-                <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-xl p-2 focus:outline-none">
-                    <i class="fa-solid fa-bars" id="menuIcon"></i>
-                </button>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-xl p-2 focus:outline-none"><i class="fa-solid fa-bars"></i></button>
             </div>
         </div>
 
         <div id="mobileMenu" class="hidden lg:hidden bg-slate-950 border-b border-emerald-900/50 px-4 py-3 space-y-2 text-xs font-semibold">
             <a href="#home" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Home</a>
             <a href="#destinations" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Destinations</a>
-            <a href="https://www.visa.gov.bd/" target="_blank" class="text-slate-300 hover:text-emerald-400 font-medium transition block py-1.5">Visa & Travel</a>
-            <a href="#cultural-programs" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Cultural Fairs</a>
+            <a href="#cultural-section" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Cultural Fairs</a>
+            <a href="#foods-section" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Traditional Foods</a>
             <a href="#live-gps" onclick="toggleMobileMenu()" class="block py-1.5 text-bdRed">Live GPS 📍</a>
-            <button onclick="openBoardModal(); toggleMobileMenu();" class="w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg">Board Members</button>
+            <button onclick="openBoardModal(); toggleMobileMenu();" class="w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg">Video Gallery & Board</button>
         </div>
     </nav>
 
     <!-- HERO SLIDER SECTION -->
     <section id="home" class="relative w-full h-[65vh] overflow-hidden bg-slate-950 flex items-center justify-center">
         <div id="videoContainer" class="absolute inset-0 w-full h-full z-0">
-            <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover brightness-90 transition-opacity duration-1000 opacity-100">
-                <source id="videoSource" src="videos/bangladesh.mp4" type="video/mp4">
+            <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover brightness-90">
+                <source src="videos/bangladesh.mp4" type="video/mp4">
             </video>
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/30 z-10"></div>
         <div class="relative z-20 max-w-5xl mx-auto px-4 text-center">
-            <h1 id="heroTitle" class="text-3xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-2xl">
+            <h1 class="text-3xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-2xl">
                 <span class="text-amber-400">BANGLA</span><span class="text-emerald-400">DESH</span>
             </h1>
-            <p id="heroSub" class="mt-3 text-xs md:text-lg text-slate-200 font-medium max-w-2xl mx-auto drop-shadow-md">
-                Land of Greenery, Rivers & Endless Heritage
-            </p>
+            <p class="mt-3 text-xs md:text-lg text-slate-200 font-medium max-w-2xl mx-auto">Land of Greenery, Rivers & Endless Heritage</p>
         </div>
-        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-slate-900/60 border border-slate-700 text-white flex items-center justify-center hover:bg-emerald-600 transition">
-            <i class="fa-solid fa-chevron-left text-xs"></i>
-        </button>
-        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-slate-900/60 border border-slate-700 text-white flex items-center justify-center hover:bg-emerald-600 transition">
-            <i class="fa-solid fa-chevron-right text-xs"></i>
-        </button>
-        <div id="dotsContainer" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2"></div>
     </section>
 
-    <!-- Notice Board Section -->
+    <!-- Notice Board -->
     <section class="py-8 bg-slate-950 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4">
             <div class="bg-slate-900 rounded-2xl p-5 border border-emerald-900/40 shadow-xl">
@@ -158,7 +122,7 @@
         </div>
     </section>
 
-    <!-- Destinations Section -->
+    <!-- 1. DESTINATIONS SECTION (9 per page + See More) -->
     <section id="destinations" class="py-12 bg-slate-900 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-6">
@@ -166,57 +130,91 @@
                 <h2 class="text-2xl font-extrabold text-white mt-1">Popular Destinations & Resorts</h2>
             </div>
 
-            <!-- SEARCH BAR FOR LOCATION SEARCH -->
+            <!-- Search Bar -->
             <div class="max-w-xl mx-auto mb-6">
                 <div class="relative">
-                    <input type="text" id="destinationSearchInput" oninput="searchDestinations()" placeholder="Search location, district or destination name (e.g. Cox's Bazar, Sajek)..." class="w-full bg-slate-950 border border-emerald-800/60 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 shadow-xl">
+                    <input type="text" id="destinationSearchInput" oninput="searchDestinations()" placeholder="Search location, district or destination name..." class="w-full bg-slate-950 border border-emerald-800/60 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 shadow-xl">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400 text-sm"></i>
                 </div>
             </div>
 
-            <!-- Category Filter Buttons -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8" id="categoryFilters">
-                <button onclick="filterDestinations('all')" class="px-4 py-2 text-xs font-bold rounded-xl transition shadow-md filter-btn" data-category="all">All</button>
-                <button onclick="filterDestinations('beaches')" class="px-4 py-2 text-xs font-semibold rounded-xl transition filter-btn" data-category="beaches">Beaches & Islands</button>
-                <button onclick="filterDestinations('hills')" class="px-4 py-2 text-xs font-semibold rounded-xl transition filter-btn" data-category="hills">Hills & Mountains</button>
-                <button onclick="filterDestinations('heritage')" class="px-4 py-2 text-xs font-semibold rounded-xl transition filter-btn" data-category="heritage">Heritage & Culture</button>
-                <button onclick="filterDestinations('forests')" class="px-4 py-2 text-xs font-semibold rounded-xl transition filter-btn" data-category="forests">Forests & Nature</button>
+            <!-- Categories -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button onclick="filterDestinations('all')" class="px-4 py-2 bg-emerald-700 text-white text-xs font-bold rounded-xl transition">All</button>
+                <button onclick="filterDestinations('beaches')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition">Beaches & Islands</button>
+                <button onclick="filterDestinations('hills')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition">Hills & Mountains</button>
+                <button onclick="filterDestinations('heritage')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition">Heritage & Culture</button>
+                <button onclick="filterDestinations('forests')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition">Forests & Nature</button>
             </div>
 
             <div id="destinationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            
+            <!-- See More Button -->
+            <div id="destSeeMoreContainer" class="text-center mt-8"></div>
         </div>
     </section>
 
-    <!-- DESTINATION DETAILS & HOTELS MODAL -->
+    <!-- 2. CULTURAL PROGRAMS & FAIRS SECTION -->
+    <section id="cultural-section" class="py-12 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-6">
+                <span class="text-amber-400 font-bold text-xs uppercase tracking-widest">Heritage & Traditions</span>
+                <h2 class="text-2xl font-extrabold text-white mt-1">Cultural Programs & Festivals</h2>
+            </div>
+
+            <!-- Two Filter Buttons -->
+            <div class="flex justify-center gap-3 mb-8">
+                <button onclick="filterCulture('all')" class="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl transition shadow-md culture-btn" data-type="all">All Events</button>
+                <button onclick="filterCulture('cultural')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition culture-btn" data-type="cultural">Cultural Programs</button>
+                <button onclick="filterCulture('fair')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold rounded-xl transition culture-btn" data-type="fair">Fairs (Melas)</button>
+            </div>
+
+            <div id="culturalGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- 3. TRADITIONAL FOODS SECTION -->
+    <section id="foods-section" class="py-12 bg-slate-900 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-6">
+                <span class="text-red-400 font-bold text-xs uppercase tracking-widest">Gastronomy & Cuisines</span>
+                <h2 class="text-2xl font-extrabold text-white mt-1">Traditional Bangladeshi Foods</h2>
+            </div>
+            <div id="foodsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- MODALS -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
-                <button onclick="closeDetailsModal()" class="px-3.5 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-red-700 transition shadow">
-                    <i class="fa-solid fa-arrow-left"></i> Back
-                </button>
+                <button onclick="closeDetailsModal()" class="px-3.5 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-red-700 transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
                 <div id="gpsNavButtonContainer"></div>
             </div>
-            
             <div id="detailsModalContent"></div>
         </div>
     </div>
 
-    <!-- BOARD MEMBERS MODAL -->
+    <!-- Official Video Gallery Style Board Members Modal -->
     <div id="boardModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeBoardModal()" class="absolute top-4 right-4 px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-red-700 transition shadow"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 class="text-xl font-extrabold text-white mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-user-tie text-emerald-400"></i> Board Members & Executives
+            <button onclick="closeBoardModal()" class="absolute top-4 right-4 px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-red-700 transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 class="text-xl font-extrabold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-video text-emerald-400"></i> Video Gallery & Executive Board
             </h2>
+            <p class="text-xs text-slate-400 mb-6">Official leadership directory and promotional video streams modeled after tourismboard.gov.bd</p>
+            <div class="mb-6 rounded-2xl overflow-hidden border border-slate-800">
+                <iframe class="w-full h-64" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tourism Promo" allowfullscreen></iframe>
+            </div>
             <div id="boardMembersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
-    <!-- PDF DOCUMENT MODAL -->
+    <!-- PDF Modal -->
     <div id="pdfModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col p-4">
         <div class="flex justify-between items-center bg-slate-900 px-6 py-4 border-b border-slate-800">
             <h3 id="pdfModalTitle" class="text-sm font-bold text-white">Notice Document</h3>
-            <button onclick="closePdfModal()" class="px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-red-700 transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="closePdfModal()" class="px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1"><i class="fa-solid fa-arrow-left"></i> Back</button>
         </div>
         <iframe id="pdfFrame" class="w-full flex-1 border-0 bg-white"></iframe>
     </div>
@@ -224,9 +222,7 @@
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <script>
-      // Firebase Config
       const firebaseConfig = {
         apiKey: "AIzaSyBwiOJy8euK1gVYvu-zhO_UBEctgux9pBw",
         authDomain: "bangladesh-tourism-board.firebaseapp.com",
@@ -236,62 +232,34 @@
         appId: "1:901892635160:web:2dbdaa822ffec58824e16d",
         measurementId: "G-LZZR9NF6RG"
       };
-
-      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
     </script>
-
-    <!-- Google Translate Invisible Engine & Custom Handler -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                autoDisplay: false
-            }, 'google_translate_element');
+            new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'google_translate_element');
         }
-
         function triggerGoogleTranslate(langCode) {
             const selectElement = document.querySelector('.goog-te-combo');
-            if (selectElement) {
-                selectElement.value = langCode;
-                selectElement.dispatchEvent(new Event('change'));
-            }
+            if (selectElement) { selectElement.value = langCode; selectElement.dispatchEvent(new Event('change')); }
         }
-
-        // Keep hiding Google's top iframe permanently
         setInterval(() => {
             const banner = document.querySelector('.goog-te-banner-frame');
-            if (banner) {
-                banner.remove();
-            }
-            if (document.body.style.top !== '0px') {
-                document.body.style.top = '0px';
-            }
+            if (banner) banner.remove();
+            if (document.body.style.top !== '0px') document.body.style.top = '0px';
         }, 100);
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <!-- JAVASCRIPT LOGIC -->
     <script src="app.js"></script>
-
     <script>
-        // Real-time location search function
         function searchDestinations() {
             const query = document.getElementById('destinationSearchInput').value.toLowerCase().trim();
             const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
-            
-            const filtered = destinations.filter(d => 
-                d.name.toLowerCase().includes(query) || 
-                d.district.toLowerCase().includes(query) ||
-                d.category.toLowerCase().includes(query)
-            );
-
+            const filtered = destinations.filter(d => d.name.toLowerCase().includes(query) || d.district.toLowerCase().includes(query));
             const grid = document.getElementById('destinationsGrid');
             if (!grid) return;
-
             if (filtered.length === 0) {
-                grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No matching destinations or locations found.</p>`;
+                grid.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-10">No matching destinations found.</p>`;
             } else {
                 grid.innerHTML = filtered.map(d => `
                     <div onclick="openDestModalById(${d.id})" class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg cursor-pointer hover:border-emerald-500/50 transition group">
