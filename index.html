@@ -62,7 +62,8 @@
                 <a href="#foods-section" class="hover:text-emerald-400 transition">Traditional Foods</a>
                 <a href="https://www.visa.gov.bd/" target="_blank" class="text-slate-300 hover:text-emerald-400 font-medium transition">Visa & Travel</a>
                 <a href="#live-gps" class="text-bdRed hover:underline">Live GPS 📍</a>
-                <button onclick="openBoardModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Video Gallery & Board</button>
+                <!-- Direct Link to Official Video Galleries -->
+                <a href="https://tourismboard.gov.bd/pages/video-galleries/" target="_blank" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg transition shadow-md">Video Galleries</a>
             </div>
 
             <!-- Language Dropdown -->
@@ -88,7 +89,7 @@
             <a href="#cultural-section" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Cultural Fairs</a>
             <a href="#foods-section" onclick="toggleMobileMenu()" class="block py-1.5 hover:text-emerald-400">Traditional Foods</a>
             <a href="#live-gps" onclick="toggleMobileMenu()" class="block py-1.5 text-bdRed">Live GPS 📍</a>
-            <button onclick="openBoardModal(); toggleMobileMenu();" class="w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg">Video Gallery & Board</button>
+            <a href="https://tourismboard.gov.bd/pages/video-galleries/" target="_blank" class="block w-full text-left py-2 px-3 bg-emerald-700 text-white rounded-lg font-bold">Video Galleries</a>
         </div>
     </nav>
 
@@ -192,21 +193,6 @@
                 <div id="gpsNavButtonContainer"></div>
             </div>
             <div id="detailsModalContent"></div>
-        </div>
-    </div>
-
-    <!-- Official Video Gallery Style Board Members Modal -->
-    <div id="boardModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-emerald-800/60 rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeBoardModal()" class="absolute top-4 right-4 px-3 py-1.5 bg-bdRed text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-red-700 transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 class="text-xl font-extrabold text-white mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-video text-emerald-400"></i> Video Gallery & Executive Board
-            </h2>
-            <p class="text-xs text-slate-400 mb-6">Official leadership directory and promotional video streams modeled after tourismboard.gov.bd</p>
-            <div class="mb-6 rounded-2xl overflow-hidden border border-slate-800">
-                <iframe class="w-full h-64" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tourism Promo" allowfullscreen></iframe>
-            </div>
-            <div id="boardMembersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
