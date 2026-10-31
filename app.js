@@ -12,7 +12,6 @@ function initApp() {
     renderFoodSection();
 }
 
-// Default Data initialization if localStorage is empty
 function setupDefaultData() {
     if (!localStorage.getItem('btb_destinations')) {
         const defaultDests = [
@@ -41,7 +40,6 @@ function setupDefaultData() {
     }
 }
 
-// Pagination state for Destinations
 let destDisplayCount = 9;
 
 function renderDestinations(category = 'all') {
@@ -83,7 +81,6 @@ function renderDestinations(category = 'all') {
         `;
     }).join('');
 
-    // See More Button control
     if (seeMoreContainer) {
         if (destDisplayCount < filtered.length) {
             seeMoreContainer.innerHTML = `
@@ -105,9 +102,17 @@ function loadMoreDestinations() {
 function filterDestinations(category) {
     destDisplayCount = 9;
     renderDestinations(category);
+
+    // Active button color switcher logic
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        if(btn.getAttribute('data-category') === category) {
+            btn.className = "px-4 py-2 text-xs font-bold rounded-xl transition filter-btn bg-emerald-700 text-white shadow-md";
+        } else {
+            btn.className = "px-4 py-2 text-xs font-semibold rounded-xl transition filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700";
+        }
+    });
 }
 
-// Cultural Programs & Fairs Section
 function renderCultureSection(type = 'all') {
     const grid = document.getElementById('culturalGrid');
     if (!grid) return;
@@ -142,14 +147,13 @@ function filterCulture(type) {
     renderCultureSection(type);
     document.querySelectorAll('.culture-btn').forEach(btn => {
         if(btn.getAttribute('data-type') === type) {
-            btn.className = "px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl transition shadow-md culture-btn";
+            btn.className = "px-4 py-2 text-xs font-bold rounded-xl transition shadow-md culture-btn bg-amber-600 text-white";
         } else {
-            btn.className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition culture-btn";
+            btn.className = "px-4 py-2 text-xs font-semibold rounded-xl transition culture-btn bg-slate-800 text-slate-300 hover:bg-slate-700";
         }
     });
 }
 
-// Traditional Foods Section
 function renderFoodSection() {
     const grid = document.getElementById('foodsGrid');
     if (!grid) return;
@@ -174,7 +178,6 @@ function renderFoodSection() {
     `).join('');
 }
 
-// Live Notices from Firebase
 function loadLiveNotices() {
     const container = document.getElementById('noticeListContainer');
     if (!container) return;
@@ -214,7 +217,6 @@ function closePdfModal() {
     document.getElementById('pdfFrame').src = '';
 }
 
-// Destination Modal Details
 function openDestModalById(id) {
     const destinations = JSON.parse(localStorage.getItem('btb_destinations')) || [];
     const d = destinations.find(item => item.id === id);
@@ -270,28 +272,4 @@ function openDestModalById(id) {
     document.getElementById('detailsModal').classList.remove('hidden');
 }
 function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
-
-// Official Tourism Board Video Gallery Style Board Members Modal
-function openBoardModal() {
-    const grid = document.getElementById('boardMembersGrid');
-    if (!grid) return;
-    const members = JSON.parse(localStorage.getItem('btb_board_members')) || [
-        { name: "Chairman, BTB", role: "Chief Executive Officer", contact: "chairman@tourism.gov.bd", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" },
-        { name: "Director (Planning)", role: "Head of Planning", contact: "planning@tourism.gov.bd", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e" }
-    ];
-
-    grid.innerHTML = members.map(m => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-4">
-            <img src="${m.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500/50" alt="${m.name}">
-            <div class="space-y-1">
-                <div class="text-sm font-bold text-white">${m.name}</div>
-                <div class="text-xs text-emerald-400 font-semibold">${m.role}</div>
-                <div class="text-xs text-slate-400"><i class="fa-solid fa-envelope mr-1 text-bdRed"></i> ${m.contact}</div>
-            </div>
-        </div>
-    `).join('');
-
-    document.getElementById('boardModal').classList.remove('hidden');
-}
-function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
 function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
